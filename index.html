@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 4.2 — Concavity and Inflection Points</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/reveal.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css'">
+<style>
+  /* ============================ THEME TOKENS ============================ */
+  :root, :root[data-theme="dark"]{
+    --bg-0:#0B0F1E;
+    --grad-1:rgba(45,212,191,0.10); --grad-2:rgba(245,185,66,0.08); --grad-3:rgba(96,165,250,0.05);
+    --panel:rgba(255,255,255,0.045); --panel-2:rgba(255,255,255,0.028);
+    --panel-border:rgba(255,255,255,0.09); --hover:rgba(255,255,255,0.09);
+    --teal:#2DD4BF; --gold:#F5B942; --rose:#FF6B8A; --blue:#60A5FA; --green:#4ADE80;
+    --text-hi:#EDEFF7; --text-lo:#9BA1BC; --rule:rgba(255,255,255,0.08);
+    --board-grid:rgba(255,255,255,0.045); --board-solid:#0A0E1C;
+    --bar-bg:rgba(16,21,40,0.86);
+    --tealsoft:rgba(45,212,191,0.14); --goldsoft:rgba(245,185,66,0.14);
+    --rosesoft:rgba(255,107,138,0.14); --bluesoft:rgba(96,165,250,0.14);
+    --greensoft:rgba(74,222,128,0.14);
+    --shadow:0 10px 30px rgba(0,0,0,0.35);
+  }
+  :root[data-theme="light"]{
+    --bg-0:#F4F6FB;
+    --grad-1:rgba(14,147,132,0.10); --grad-2:rgba(180,120,10,0.09); --grad-3:rgba(37,99,235,0.06);
+    --panel:rgba(255,255,255,0.80); --panel-2:rgba(15,23,42,0.035);
+    --panel-border:rgba(15,23,42,0.11); --hover:rgba(15,23,42,0.05);
+    --teal:#0E9384; --gold:#B4780A; --rose:#D6336C; --blue:#2563EB; --green:#15803D;
+    --text-hi:#10141F; --text-lo:#56607A; --rule:rgba(15,23,42,0.11);
+    --board-grid:rgba(15,23,42,0.06); --board-solid:#FBFCFE;
+    --bar-bg:rgba(255,255,255,0.92);
+    --tealsoft:rgba(14,147,132,0.12); --goldsoft:rgba(180,120,10,0.12);
+    --rosesoft:rgba(214,51,108,0.11); --bluesoft:rgba(37,99,235,0.11);
+    --greensoft:rgba(21,128,61,0.12);
+    --shadow:0 10px 30px rgba(15,23,42,0.10);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ font-size:29px; }
+
+  html, body, .reveal-viewport{
+    margin:0; padding:0;
+    background:
+      radial-gradient(ellipse 60vw 55vh at 15% -10%, var(--grad-1), transparent 60%),
+      radial-gradient(ellipse 60vw 55vh at 90% 8%, var(--grad-2), transparent 55%),
+      radial-gradient(ellipse 55vw 65vh at 50% 70%, var(--grad-3), transparent 60%),
+      var(--bg-0);
+    background-attachment:fixed;
+    color:var(--text-hi); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+
+  /* ============================ REVEAL SHELL ============================ */
+  .reveal{ font-family:'Inter',sans-serif; font-size:1rem; color:var(--text-hi); }
+  .reveal .slides{ text-align:left; }
+  .reveal .slides section{ height:100%; padding:0; }
+  .reveal .controls{ color:var(--teal); font-size:clamp(8px,0.93vh,20px); }
+  .reveal .progress{ color:var(--teal); height:4px; background:var(--rule); }
+  .reveal a{ color:var(--teal); text-decoration:none; }
+  .reveal .slides section .fragment{ transition:opacity .28s ease, visibility .28s ease; }
+
+  body.booting .reveal{ opacity:0; }
+  #bootmsg{ position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-style:italic; font-size:22px; color:var(--text-lo); z-index:5; }
+  body.booting #bootmsg{ display:flex; }
+
+  .sl{ position:absolute; inset:0; padding:30px 56px 82px; display:flex; flex-direction:column; overflow:hidden; }
+  .sl-top{ flex:0 0 auto; display:flex; align-items:center; gap:14px; height:44px; margin-bottom:18px; }
+  .sl-top .num{ font-family:'Fraunces',serif; font-size:0.86rem; color:#0B0F1E;
+    background:linear-gradient(135deg,var(--teal),var(--gold));
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:600; flex:0 0 auto; }
+  .sl-top .bt{ font-family:'Fraunces',serif; font-weight:500; font-size:1.08rem; white-space:nowrap; }
+  .sl-top .line{ flex:1; height:1px; background:var(--rule); }
+  .sl-top .it{ font-family:'Fraunces',serif; font-style:italic; font-size:0.92rem; color:var(--text-lo); white-space:nowrap; }
+  .sl-main{ flex:1 1 auto; min-height:0; position:relative; }
+  .sl-fit{ position:absolute; left:0; top:0; width:100%; transform-origin:0 0; }
+
+  .glass{ background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:16px; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+
+  /* ============================ TITLE SLIDE ============================ */
+  .title-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:56px; align-items:center; padding-top:34px; }
+  .kicker-line{ display:flex; align-items:center; gap:10px; margin-bottom:1.3rem; }
+  .kicker-line .dot{ width:9px; height:9px; border-radius:50%;
+    background:linear-gradient(90deg,var(--teal),var(--gold)); }
+  .kicker-line span{ font-size:0.9rem; color:var(--text-lo); letter-spacing:0.01em; }
+  h1{ font-family:'Fraunces',serif; font-weight:500; font-size:3.6rem; line-height:1.06; margin:0 0 1.2rem; }
+  h1 .sec{ display:block; font-size:0.33em; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--text-lo); font-family:'Inter',sans-serif; font-weight:600; margin-bottom:0.9rem; }
+  h1 em{ font-style:italic; font-weight:400;
+    background:linear-gradient(90deg,var(--teal),var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .tagline{ font-size:1.05rem; color:var(--text-lo); margin:0 0 1.4rem; }
+  .tagline .up{ color:var(--teal); } .tagline .dn{ color:var(--gold); }
+  .agenda{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .reveal .agenda a{ display:flex; align-items:center; gap:14px; padding:0.42rem 0.8rem; border-radius:11px;
+    color:var(--text-hi); background:var(--panel-2); border:1px solid var(--rule);
+    font-size:0.86rem; transition:background .15s ease, border-color .15s ease; }
+  .reveal .agenda a:hover{ background:var(--hover); border-color:var(--teal); }
+  .agenda b{ font-family:'Fraunces',serif; font-weight:600; font-size:0.78rem; color:#0B0F1E;
+    background:linear-gradient(135deg,var(--teal),var(--gold));
+    width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .objectives{ padding:1.4rem 1.6rem; border-radius:16px; background:var(--panel); border:1px solid var(--panel-border); }
+  .objectives .oh{ font-size:0.74rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--teal); font-weight:600; margin-bottom:0.9rem; }
+  .objectives ul{ margin:0; padding-left:1.15rem; }
+  .objectives li{ color:var(--text-hi); font-size:1rem; line-height:1.55; margin-bottom:0.65rem; }
+  .title-foot{ margin-top:40px; padding-top:18px; border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    color:var(--text-lo); font-size:0.72rem; }
+  .title-foot kbd{ font-family:'Inter',sans-serif; font-size:0.92em; font-weight:600; color:var(--text-hi);
+    background:var(--panel-2); border:1px solid var(--panel-border); border-radius:6px; padding:0.08rem 0.4rem; margin-right:0.25rem; }
+  .title-foot .keys span{ margin-left:1rem; white-space:nowrap; }
+  .thanks{ text-align:center; }
+  .thanks h1{ font-size:4.4rem; margin-bottom:0.6rem; }
+  .thanks p{ color:var(--text-lo); font-size:1.1rem; margin:0.3rem 0; }
+
+  /* ============================ STATEMENT BOXES ============================ */
+  .box{ margin:0 0 16px; border-radius:13px; overflow:hidden;
+    border:1px solid var(--panel-border); background:var(--panel); }
+  .box:last-child{ margin-bottom:0; }
+  .box-head{ display:flex; align-items:baseline; flex-wrap:wrap; gap:0.6rem;
+    padding:0.6rem 1.1rem; border-bottom:1px solid var(--rule); }
+  .box-kind{ font-size:0.74rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; }
+  .box-name{ font-family:'Fraunces',serif; font-style:italic; font-size:0.95rem; color:var(--text-lo); }
+  .box-body{ padding:0.85rem 1.2rem; font-size:1rem; line-height:1.62; color:var(--text-hi); }
+  .box-body p{ margin:0.4rem 0; }
+  .box-body ol,.box-body ul{ margin:0.4rem 0; padding-left:1.5rem; }
+  .box-body li{ margin-bottom:0.3rem; }
+  .box.def   { border-left:4px solid var(--teal);  }
+  .box.def   .box-head{ background:var(--tealsoft); }  .box.def   .box-kind{ color:var(--teal); }
+  .box.thm   { border-left:4px solid var(--blue);  }
+  .box.thm   .box-head{ background:var(--bluesoft); }  .box.thm   .box-kind{ color:var(--blue); }
+  .box.rem   { border-left:4px dashed var(--gold); }
+  .box.rem   .box-head{ background:var(--goldsoft); }  .box.rem   .box-kind{ color:var(--gold); }
+  .box.rem   .box-body{ color:var(--text-lo); }
+
+  .plot-host{ width:100%; }
+  .plot-host svg{ display:block; width:100%; height:auto; border-radius:10px; }
+  .caption{ font-family:'Fraunces',serif; font-style:italic; font-size:0.8rem;
+    color:var(--text-lo); text-align:center; margin-top:8px; }
+  .figcard{ padding:14px; }
+  .figcard.center{ margin:0 auto; }
+
+  /* ============================ PROBLEM SLIDES ============================ */
+  .q{ display:flex; align-items:flex-start; gap:16px; padding:16px 20px; margin-bottom:16px; }
+  .prob-badge{ flex:0 0 auto; font-size:0.7rem; letter-spacing:0.09em; text-transform:uppercase;
+    padding:0.3rem 0.62rem; border-radius:6px; font-weight:700; margin-top:0.18rem; white-space:nowrap; }
+  .b-ex{ background:var(--tealsoft); color:var(--teal); }
+  .b-rel{ background:var(--bluesoft); color:var(--blue); }
+  .b-ch{ background:var(--rosesoft); color:var(--rose); }
+  .b-com{ background:var(--goldsoft); color:var(--gold); }
+  .prob-q{ flex:1; min-width:0; font-size:1rem; line-height:1.6; }
+  .prob-q .qb{ color:var(--text-hi); }
+  .q.compact .qb{ font-size:0.9rem; color:var(--text-lo); }
+
+  .work.two{ display:grid; grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); gap:26px; align-items:start; }
+  .work.two.wide{ grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr); }
+  .work.two.vid{ grid-template-columns:minmax(0,1.45fr) minmax(0,1fr); align-items:center; }
+  .work.two.chart{ grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr); }
+  .steps.recap > li::before{ color:var(--text-lo); background:var(--panel-2); }
+  .work.two.even{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+
+  .steps{ list-style:none; counter-reset:st; padding:0; margin:0.2rem 0 0; }
+  .steps > li{ counter-increment:st; position:relative; padding:0 0 0.6rem 4.3rem; }
+  .steps > li::before{
+    content:"Step " counter(st); position:absolute; left:0; top:0.24rem;
+    font-size:0.6rem; letter-spacing:0.06em; text-transform:uppercase; font-weight:700;
+    color:var(--teal); background:var(--tealsoft); padding:0.18rem 0.4rem; border-radius:5px; white-space:nowrap;
+  }
+  .steps .sx{ display:block; color:var(--text-lo); font-size:0.94rem; line-height:1.5; }
+  .steps .sm{ display:block; color:var(--text-hi); margin:0.15rem 0; }
+  .answer{ margin:0.7rem 0 0; padding:0.7rem 1.2rem; border-radius:11px;
+    background:var(--tealsoft); border:1px solid var(--panel-border);
+    border-left:4px solid var(--teal); color:var(--text-hi); font-size:1rem; }
+  .answer .k{ font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--teal); font-weight:700; display:block; margin-bottom:0.25rem; }
+  .answer.gold{ background:var(--goldsoft); border-left-color:var(--gold); }
+  .answer.gold .k{ color:var(--gold); }
+  .answer.rose{ background:var(--rosesoft); border-left-color:var(--rose); }
+  .answer.rose .k{ color:var(--rose); }
+  .katex-display{ margin:0.4em 0; }
+  .cu{ color:var(--teal); } .cd{ color:var(--gold); } .ro{ color:var(--rose); }
+
+  /* ============================ SIGN CHART (number lines, as in the procedure video) ============================ */
+  .nl{ padding:22px 26px 18px; }
+  .nl-head{ font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; color:var(--text-lo); margin-bottom:8px; }
+  .nl-head .katex{ text-transform:none; letter-spacing:0; font-size:1.25em; }
+  .nl-body{ position:relative; }
+  .nl-row{ display:grid; grid-template-columns:120px 1fr; align-items:center; height:128px; }
+  .nl-lab{ font-size:1.08rem; text-align:right; padding-right:22px; }
+  .nl-row.one{ height:190px; }
+  .nl-row.one .nl-lab{ display:flex; flex-direction:column; justify-content:center; gap:46px; }
+  .nl-lab .lf{ color:var(--text-hi); } .nl-lab .lf2{ color:var(--gold); }
+  .nl-lab.f2{ color:var(--gold); }
+  .nl-track{ position:relative; height:100%; margin:0 14px; }
+  .nl-axis{ position:absolute; left:0; right:0; top:50%; height:3px; margin-top:-1.5px; background:var(--text-hi); border-radius:2px; }
+  .nl-axis::before,.nl-axis::after{ content:""; position:absolute; top:50%; width:0; height:0;
+    border-top:9px solid transparent; border-bottom:9px solid transparent; transform:translateY(-50%); }
+  .nl-axis::before{ left:-12px; border-right:15px solid var(--text-hi); }
+  .nl-axis::after { right:-12px; border-left:15px solid var(--text-hi); }
+  .nl-axis.closed::before,.nl-axis.closed::after{ display:none; }
+  .nl-pt{ position:absolute; top:50%; width:19px; height:19px; margin:-9.5px 0 0 -9.5px; border-radius:50%;
+    background:var(--bg-0); border:3px solid var(--text-hi); z-index:2; }
+  .nl-pt.end{ background:var(--text-hi); }
+  .nl-pt.out{ border-color:var(--rose); }
+  .nl-pt.dne{ border-color:var(--blue); }
+  .nl-pl{ position:absolute; top:calc(50% + 14px); transform:translateX(-50%); font-size:0.95rem; white-space:nowrap; text-align:center; line-height:1.25; }
+  .nl-pl small{ display:block; font-size:0.7rem; font-weight:600; }
+  .nl-pl small.out{ color:var(--rose); } .nl-pl small.dne{ color:var(--blue); }
+  .nl-guide{ position:absolute; top:0; bottom:0; width:0; border-left:2px dashed var(--text-lo); opacity:.5; }
+  .nl-sg{ position:absolute; top:calc(50% + 12px); width:46px; height:46px; margin-left:-23px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:600; line-height:1; border:3px solid; }
+  .nl-sg.pos{ color:var(--teal); border-color:var(--teal); background:var(--tealsoft); }
+  .nl-sg.neg{ color:var(--gold); border-color:var(--gold); background:var(--goldsoft); }
+  .nl-arc{ position:absolute; top:calc(50% - 66px); width:132px; height:56px; margin-left:-66px; }
+  .nl-arc svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+  .nl-arc path{ fill:none; stroke-width:4.5; stroke-linecap:round; }
+  .nl-arc.up path{ stroke:var(--teal); } .nl-arc.dn path{ stroke:var(--gold); }
+  .nl-arc span{ position:absolute; left:0; right:0; text-align:center; font-weight:700; font-size:0.86rem; }
+  .nl-arc.up span{ top:4px; color:var(--teal); } .nl-arc.dn span{ top:22px; color:var(--gold); }
+  .nl-res{ margin-top:12px; font-size:1.02rem; line-height:1.7; }
+  .nl-res > div{ padding-left:0.2rem; }
+  .ipbox{ margin-top:10px; display:inline-block; padding:0.5rem 1.1rem; border:2px solid var(--gold); border-radius:10px;
+    background:var(--goldsoft); font-size:1.02rem; }
+  .ipbox.none{ border-color:var(--rose); background:var(--rosesoft); }
+  .ipnote{ margin-top:8px; font-size:0.9rem; color:var(--text-lo); }
+
+  /* ============================ PROCEDURE VIDEO ============================ */
+  .vidcard{ padding:12px; }
+  .vidcard video{ display:block; width:100%; aspect-ratio:16/9; border-radius:10px; background:#0B0F1E; }
+  .vidmiss{ display:none; aspect-ratio:16/9; align-items:center; justify-content:center; text-align:center; padding:2rem;
+    color:var(--text-lo); font-size:0.95rem; border:1px dashed var(--rule); border-radius:10px; }
+  .vidcard.missing video{ display:none; } .vidcard.missing .vidmiss{ display:flex; }
+  .proc{ margin:0; padding-left:1.3rem; font-size:0.98rem; line-height:1.6; }
+  .proc li{ margin-bottom:0.55rem; }
+
+  /* ============================ EMBEDDED EXPLORER ============================ */
+  /* the Explorer is laid out 1.25x smaller and scaled up: everything in it reads 25% larger */
+  .explorer-box{ height:720px; overflow:hidden; border-radius:14px; }
+  .explorer{ transform:scale(1.25); transform-origin:0 0; display:block; width:80%; height:576px; border:1px solid var(--panel-border); border-radius:14px; background:var(--bg-0); }
+
+  /* ============================ ON-SCREEN TOOLBAR ============================ */
+  #bar, #boardbar{ font-family:'Inter',sans-serif; font-size:clamp(13px,1.5vh,22px); }
+  #bar{ position:fixed; left:0.9em; bottom:0.75em; z-index:40; display:flex; align-items:center; gap:0.45em; }
+  body.board-open #bar, body.embedded #bar, body.booting #bar{ display:none; }
+  .ub{ display:inline-flex; align-items:center; justify-content:center; gap:0.45em;
+    min-width:2.8em; height:2.8em; padding:0 0.75em; border-radius:0.8em; cursor:pointer;
+    font:inherit; font-weight:500; color:var(--text-hi);
+    background:var(--bar-bg); border:1px solid var(--panel-border);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    transition:background .15s ease, border-color .15s ease, color .15s ease; }
+  .ub:hover{ border-color:var(--teal); }
+  .ub:disabled{ opacity:0.35; cursor:default; }
+  .ub svg{ width:1.25em; height:1.25em; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:0 0 auto; }
+  .ub.on{ color:var(--teal); border-color:var(--teal); background:var(--tealsoft); }
+  .ub.sq{ padding:0; }
+  #bPos{ min-width:6.6em; height:2.8em; display:inline-flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:0 0.7em; border-radius:0.8em; background:var(--bar-bg); border:1px solid var(--panel-border);
+    color:var(--text-lo); font-size:0.78em; line-height:1.25; }
+  #bPos b{ font-family:'Fraunces',serif; font-weight:600; font-size:1.2em; color:var(--text-hi); }
+  #bBoard{ position:relative; }
+  #bBoard.has-ink::after{ content:""; position:absolute; top:0.35em; right:0.35em; width:0.5em; height:0.5em;
+    border-radius:50%; background:var(--gold); }
+  #themeBtn svg{ stroke:var(--gold); }
+  :root[data-theme="light"] #themeBtn svg{ stroke:var(--blue); }
+  #themeBtn .t-dark{ display:none; }
+  :root[data-theme="light"] #themeBtn .t-dark{ display:inline; }
+  :root[data-theme="light"] #themeBtn .t-light{ display:none; }
+  #themeBtn .i-moon{ display:none; }
+  :root[data-theme="light"] #themeBtn .i-moon{ display:block; }
+  :root[data-theme="light"] #themeBtn .i-sun{ display:none; }
+
+  /* ============================ FULL-SCREEN BOARD ============================ */
+  #board{ position:fixed; inset:0; z-index:300; display:none; }
+  #board.on{ display:block; }
+  #board canvas{
+    position:absolute; inset:0; width:100%; height:100%; touch-action:none;
+    cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'><path d='M3 23.2l1.3-4.4L17 6.1l3.1 3.1L7.4 21.9z' fill='%23F5B942' stroke='%231A1A1A' stroke-width='1.2' stroke-linejoin='round'/><path d='M17 6.1l2.1-2.1a1.7 1.7 0 012.4 0l0.7 0.7a1.7 1.7 0 010 2.4l-2.1 2.1z' fill='%23C9CEDB' stroke='%231A1A1A' stroke-width='1.2' stroke-linejoin='round'/><path d='M3 23.2l2.6-0.9-1.7-1.7z' fill='%231A1A1A'/></svg>") 3 23, crosshair;
+  }
+  #board.erasing canvas{
+    cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'><rect x='4' y='12' width='16' height='9' rx='2' transform='rotate(-30 12 16)' fill='%23FF9EB5' stroke='%231A1A1A' stroke-width='1.2'/></svg>") 6 20, cell;
+  }
+  #board.over{ box-shadow:inset 0 0 0 3px var(--teal); }
+  #board.page canvas{
+    background:
+      linear-gradient(var(--board-grid) 1px, transparent 1px) 0 0 / 100% 32px,
+      linear-gradient(90deg, var(--board-grid) 1px, transparent 1px) 0 0 / 32px 100%,
+      var(--board-solid);
+  }
+  #boardbar{ position:absolute; left:50%; bottom:0.75em; transform:translateX(-50%);
+    display:flex; align-items:center; gap:0.9em; padding:0.5em 0.7em; border-radius:1.1em;
+    background:var(--bar-bg); border:1px solid var(--panel-border); box-shadow:var(--shadow);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); white-space:nowrap; }
+  #boardbar .grp{ display:flex; align-items:center; gap:0.4em; }
+  #boardbar .sep{ width:1px; align-self:stretch; background:var(--rule); }
+  #boardbar .ub{ height:2.5em; min-width:2.5em; background:var(--panel-2); backdrop-filter:none; -webkit-backdrop-filter:none; }
+  #boardbar .ub.on{ background:var(--tealsoft); }
+  .sw{ width:1.9em; height:1.9em; border-radius:50%; cursor:pointer; border:3px solid transparent;
+    transition:transform .15s ease,border-color .15s ease; }
+  .sw.on{ border-color:var(--text-hi); transform:scale(1.14); }
+  .szbtn i{ display:block; border-radius:50%; background:currentColor; }
+  .seg{ display:flex; border:1px solid var(--panel-border); border-radius:0.8em; overflow:hidden; }
+  .seg .ub{ border:0; border-radius:0; }
+
+  /* ============================ FALLBACK (reveal.js did not load) ============================ */
+  #failmsg{ display:none; }
+  body.no-reveal{ overflow:auto; }
+  body.no-reveal #failmsg{ display:block; position:sticky; top:0; z-index:50; padding:10px 18px; font-size:15px;
+    background:var(--rosesoft); color:var(--text-hi); border-bottom:1px solid var(--rose); backdrop-filter:blur(10px); }
+  body.no-reveal .reveal, body.no-reveal .reveal .slides{ position:static; width:auto; height:auto; overflow:visible; }
+  body.no-reveal .reveal .slides section{ display:block; position:static; height:auto; }
+  body.no-reveal .sl{ position:relative; inset:auto; overflow:visible; padding:26px 5vw; border-bottom:1px solid var(--rule); }
+  body.no-reveal .sl-fit{ position:static; width:auto !important; transform:none !important; }
+  body.no-reveal .fragment{ opacity:1 !important; visibility:visible !important; }
+  body.no-reveal .notes{ display:none; }
+  body.no-reveal #bPrev, body.no-reveal #bNext, body.no-reveal #bPos, body.no-reveal #bOver, body.no-reveal #bBoard{ display:none; }
+
+  /* Explorer slide: compact two-line heading on the left, more height for the three graphs */
+  .xslide .sl-top{ flex-direction:column; align-items:flex-start; gap:0; height:auto; margin-bottom:8px; }
+  .xslide .sl-top .num, .xslide .sl-top .line{ display:none; }
+  .xslide .sl-top .bt{ font-size:0.95rem; line-height:1.2; }
+  .xslide .sl-top .it{ font-size:0.72rem; line-height:1.2; }
+  .xslide .explorer-box{ height:752px; }
+  .xslide .explorer{ height:601px; }
+
+  /* one-slide solutions: working | divider | the rest of the solution */
+  .work.two.split{ grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:0; }
+  .work.two.split > div:first-child{ padding-right:26px; }
+  .work.two.split > div:last-child{ border-left:3px solid var(--panel-border); padding-left:26px; min-height:100%; }
+
+  /* points that belong to the domain are filled; an open circle means "not in D_f" */
+  .nl-pt{ background:var(--text-hi); }
+  .nl-pt.dne{ background:var(--blue); }
+  .nl-pt.out{ background:var(--bg-0); }
+
+  /* ============================ INTERACTIVE TOOLS (4.3) ============================ */
+  .widget{ padding:14px 18px; }
+  .wgrid{ display:grid; grid-template-columns:minmax(0,1fr) 440px; gap:22px; align-items:start; }
+  .wname{ font-family:'Fraunces',serif; font-size:1.02rem; margin:0 0 8px; }
+  .tabs{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .tab,.tbtn{ font-family:'Inter',sans-serif; font-size:0.78rem; color:var(--text-lo); background:var(--panel-2);
+    border:1px solid var(--panel-border); padding:0.38rem 0.9rem; border-radius:999px; cursor:pointer; }
+  .tab.on,.tbtn.on{ color:var(--teal); background:var(--tealsoft); border-color:var(--teal); }
+  .wl{ display:block; font-size:0.78rem; color:var(--text-lo); margin:4px 0 10px; }
+  .wl b{ color:var(--gold); font-family:'Fraunces',serif; }
+  .wl input[type=range]{ display:block; width:100%; height:40px; margin:0; accent-color:var(--teal); cursor:pointer; }
+  .lamps{ display:flex; flex-direction:column; gap:7px; margin-bottom:10px; }
+  .lamp{ display:flex; align-items:center; gap:10px; padding:0.4rem 0.8rem; border-radius:10px; border:1px solid var(--rule);
+    background:var(--panel-2); font-size:0.8rem; }
+  .lamp .bulb{ width:13px; height:13px; border-radius:50%; flex:0 0 auto; background:var(--text-lo); }
+  .lamp.ok{ border-color:var(--green); background:var(--greensoft); } .lamp.ok .bulb{ background:var(--green); }
+  .lamp.bad{ border-color:var(--rose); background:var(--rosesoft); } .lamp.bad .bulb{ background:var(--rose); }
+  .readout{ display:grid; grid-template-columns:auto 1fr; gap:0.3rem 1rem; font-size:0.84rem; margin:0 0 10px; }
+  .readout dt{ color:var(--text-lo); } .readout dd{ margin:0; text-align:right; font-family:'Fraunces',serif; }
+  .verdict{ margin-top:10px; padding:0.55rem 0.9rem; border-radius:10px; text-align:center; font-size:0.84rem; line-height:1.35;
+    border:1px solid var(--rule); background:var(--panel-2); color:var(--text-lo); min-height:3.6em; display:flex; align-items:center; justify-content:center; }
+  .verdict.ok{ border-color:var(--green); background:var(--greensoft); color:var(--green); }
+  .verdict.bad{ border-color:var(--rose); background:var(--rosesoft); color:var(--rose); }
+  .wtable{ width:100%; border-collapse:collapse; font-size:0.84rem; }
+  .wtable th,.wtable td{ padding:0.35rem 0.4rem; text-align:center; border-bottom:1px solid var(--rule); }
+  .wtable th{ color:var(--text-lo); font-weight:500; }
+  .wtable tr.mx td{ color:var(--rose); font-weight:600; } .wtable tr.mn td{ color:var(--teal); font-weight:600; }
+
+  /* candidates table in solutions */
+  .ctab{ width:100%; border-collapse:collapse; margin:0.3rem 0 0.6rem; font-size:1rem; }
+  .ctab th,.ctab td{ padding:0.45rem 0.6rem; text-align:center; border-bottom:1px solid var(--rule); }
+  .ctab th{ color:var(--text-lo); font-weight:500; font-size:0.86rem; }
+  .ctab tr.mx td{ color:var(--rose); } .ctab tr.mn td{ color:var(--teal); }
+  .chk{ font-size:1rem; line-height:1.55; margin:0.2rem 0 0.5rem; }
+  .chk .ok{ color:var(--green); font-weight:700; } .chk .no{ color:var(--rose); font-weight:700; }
+  .figrow{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .figrow .caption{ font-size:0.72rem; }
+
+  /* ============================ 4.1: monotonicity sign chart and book figures ============================ */
+  .verdict.gold{ border-color:var(--gold); background:var(--goldsoft); color:var(--gold); }
+  .nl-ar{ position:absolute; top:calc(50% - 64px); width:80px; margin-left:-40px; text-align:center; font-size:2.1rem; line-height:1; font-weight:700; }
+  .nl-ar.up{ color:var(--teal); } .nl-ar.dn{ color:var(--gold); }
+  .bookfig{ display:block; width:100%; height:auto; border-radius:10px; background:#fff; padding:6px; }
+  .monogrid{ display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:22px; align-items:center; }
+
+  /* signs sit lower than the point labels so they never overlap */
+  .nl-row.one .nl-sg{ top:calc(50% + 44px); }
+  .nl-row.one{ height:205px; }
+  /* "∉ D_f" / "f′ DNE" tags sit just above their point, clear of the signs */
+  .nl-row.one .nl-pl small{ position:absolute; left:50%; transform:translateX(-50%); top:-64px; white-space:nowrap; }
+</style>
+</head>
+<body class="booting">
+<div id="bootmsg">Loading Section 4.2 …</div>
+<div id="failmsg">reveal.js could not be loaded, so the seminar is shown as one long page. Check the internet connection and reload to get the slides back.</div>
+<div class="reveal">
+<div class="slides">
+<section data-zmax="1" data-valign="center" data-item="Title">
+<div class="sl"><div class="sl-main"><div class="sl-fit">
+<div class="title-grid">
+  <div>
+    <div class="kicker-line"><span class="dot"></span><span>Faculty Seminar · Calculus · Applications of Differentiation</span></div>
+    <h1><span class="sec">Section 4.2</span>Concavity and <em>Inflection Points</em></h1>
+    <p class="tagline"><span class="up">$f''(x) &gt; 0 \Rightarrow$ concave up</span> &nbsp;·&nbsp; <span class="dn">$f''(x) &lt; 0 \Rightarrow$ concave down</span></p>
+    <nav class="agenda" data-prevent-swipe><a href="#/1"><b>1</b>Concavity</a><a href="#/2"><b>2</b>Inflection points</a><a href="#/3"><b>3</b>Intervals of concavity</a><a href="#/4"><b>4</b>The second derivative test</a><a href="#/5"><b>5</b>Challenging & Communicate</a></nav>
+  </div>
+  <div class="objectives"><div class="oh">Learning objectives</div>
+    <p style="margin:0 0 0.7rem;color:var(--text-lo)">At the end of this section, you should be able to:</p>
+    <ul><li>Investigate additional features of graphs of functions, particularly concavity and points of inflection.</li>
+    <li>Explore and analyze the concavity of graphs of functions using the methods of calculus.</li>
+    <li>Identify and determine points of inflection of a function using calculus techniques.</li></ul></div>
+</div>
+<div class="title-foot"><span>Dr. Wessam Gouda · Department of Mathematics</span><span class="keys"><span><kbd>Space</kbd>next step</span><span><kbd>↑ ↓</kbd>inside a block</span><span><kbd>← →</kbd>between blocks</span><span><kbd>W</kbd>board</span><span><kbd>T</kbd>light / dark</span><span><kbd>Esc</kbd>overview</span><span><kbd>F</kbd>full screen</span></span></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">التنقل: Space للخطوة التالية · ↑ ↓ داخل الكتلة · ← → بين الكتل · W السبورة · T الوضع الغامق/الفاتح · Esc نظرة عامة · F ملء الشاشة.</div></aside>
+</section>
+<section>
+<section data-zmax="1.0" data-valign="top" data-item="Concavity">
+<div class="sl"><div class="sl-top"><span class="num">1</span><span class="bt">Concavity</span><span class="line"></span><span class="it">Concavity</span></div><div class="sl-main"><div class="sl-fit">
+<p style="margin:0 0 14px;font-size:1.05rem">The first derivative is the slope of the tangent line; the second derivative describes how that slope changes — the curvature of the graph.</p><div class="glass figcard center" style="width:1100px"><div class="plot-host" data-fig="intro"></div></div><div class="work two even" style="margin-top:14px"><div class="answer"><span class="k">Concave up</span>the graph lies <b>above</b> its tangent lines</div><div class="answer gold"><span class="k">Concave down</span>the graph lies <b>below</b> its tangent lines</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">على (−π, 0) الميول تزيد من اليسار لليمين والمنحنى فوق المماسات: تقعر لأعلى. على (0, π) الميول تقل والمنحنى تحت المماسات: تقعر لأسفل.</div></aside>
+</section>
+<section data-zmax="1.35" data-valign="center" data-item="Definition 4.2.1 · Theorem 4.2.1">
+<div class="sl"><div class="sl-top"><span class="num">1</span><span class="bt">Concavity</span><span class="line"></span><span class="it">Definition 4.2.1 · Theorem 4.2.1</span></div><div class="sl-main"><div class="sl-fit">
+<div class="box def" ><div class="box-head"><span class="box-kind">Definition 4.2.1</span><span class="box-name">Concave Up or Concave Down</span></div><div class="box-body">Let $f$ be a differentiable function on an open interval $I$. Then<ol><li>$f$ is said to be <b>concave up</b> on $I$ if $f'$ is increasing on $I$.</li><li>$f$ is said to be <b>concave down</b> on $I$ if $f'$ is decreasing on $I$.</li></ol></div></div><div class="box thm fragment"  data-fragment-index="1"><div class="box-head"><span class="box-kind">Theorem 4.2.1</span><span class="box-name">Concavity Test</span></div><div class="box-body">Suppose $f''(x)$ exists on an open interval $I$.<ol><li>If $f''(x) &gt; 0$ on $I$, then $f$ is concave up on $I$.</li><li>If $f''(x) &lt; 0$ on $I$, then $f$ is concave down on $I$.</li></ol></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">التعريف بدلالة تزايد وتناقص f′، ثم ضغطة تُظهر اختبار التقعر بإشارة f″. <br>عدد الضغطات في الشريحة: 1.</div></aside>
+</section>
+<section data-zmax="1.0" data-valign="top" data-item="Interactive · Concavity Explorer" data-prevent-swipe class="xslide">
+<div class="sl"><div class="sl-top"><span class="num">1</span><span class="bt">Concavity</span><span class="line"></span><span class="it">Interactive · Concavity Explorer</span></div><div class="sl-main"><div class="sl-fit">
+<div class="explorer-box"><iframe id="explorer" class="explorer" title="Concavity Explorer" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, viewport-fit=cover&quot;&gt;
+&lt;title&gt;Concavity Explorer&lt;/title&gt;
+&lt;meta name=&quot;claude:viewport-fit-sides&quot; content=&quot;cover&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Source+Serif+4:opsz,wght@8..60,600&amp;display=swap&quot;&gt;
+&lt;style&gt;
+/* Layout: one working board — function picker on top, graph with a draggable point, live readout + f&#x27;&#x27; sign strip beside it (stacks on phones). */
+:root{
+  --bg:#0E1626; --panel:#152036; --line:#2B3A55; --ink:#F1ECE2; --muted:#93A0B8;
+  --up:#5FC2B4; --down:#E8C27A; --point:#F4F0E8; --tan:#C9D3E6;
+  --f-display:&quot;Source Serif 4&quot;, Georgia, &quot;Times New Roman&quot;, serif;
+  --f-body:&quot;IBM Plex Sans&quot;, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;
+  --f-mono:&quot;IBM Plex Mono&quot;, ui-monospace, Consolas, monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme=&quot;dark&quot;]){
+  --bg:#FAF8F3; --panel:#FFFFFF; --line:#DAD3C4; --ink:#1B2333; --muted:#5F6A80;
+  --up:#1F7A6D; --down:#A8781F; --point:#1B2333; --tan:#5F6A80; color-scheme:light}}
+:root[data-theme=&quot;light&quot;]{
+  --bg:#FAF8F3; --panel:#FFFFFF; --line:#DAD3C4; --ink:#1B2333; --muted:#5F6A80;
+  --up:#1F7A6D; --down:#A8781F; --point:#1B2333; --tan:#5F6A80; color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 28px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(1.5rem,3vw,2.1rem);margin:0;text-wrap:balance}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--down);font-weight:600}
+.lede{color:var(--muted);margin:0;max-width:62ch}
+.picker{display:flex;flex-wrap:wrap;gap:8px}
+.picker button{font:inherit;font-size:.86rem;color:var(--ink);background:transparent;border:1px solid var(--line);
+  border-radius:999px;padding:6px 14px;cursor:pointer}
+.picker button:hover{border-color:var(--muted)}
+.picker button[aria-pressed=&quot;true&quot;]{border-color:var(--down);color:var(--down)}
+.picker button:focus-visible,.board:focus-visible,input:focus-visible{outline:2px solid var(--down);outline-offset:2px}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}
+@media (max-width:820px){.main{grid-template-columns:minmax(0,1fr)}}
+.board{background:var(--panel);border:1px solid var(--line);border-radius:10px;position:relative;min-width:0}
+canvas{display:block;width:100%;height:auto;touch-action:none;cursor:grab;border-radius:10px}
+.strip{padding:0 14px 12px}
+#ink{position:absolute;left:0;top:0;width:100%;pointer-events:none;border-radius:10px}
+#ink.on{pointer-events:auto;cursor:crosshair}
+.pen{position:absolute;top:10px;right:10px;display:flex;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 6px}
+.pen button{font:inherit;font-size:.78rem;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}
+.pen button[aria-pressed=&quot;true&quot;]{border-color:var(--down);color:var(--down)}
+.pen .sw{width:20px;height:20px;padding:0;background:var(--c)}
+.pen .sw.sel{outline:2px solid var(--ink);outline-offset:1px}
+.side{display:grid;gap:12px;align-content:start;min-width:0}
+.read{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:6px}
+.row{display:flex;justify-content:space-between;gap:12px;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:.92rem}
+.row span:first-child{color:var(--muted)}
+.state{margin-top:6px;font-weight:600;font-size:1rem;padding:6px 10px;border-radius:6px;text-align:center;border:1px solid currentColor}
+.state.up{color:var(--up)} .state.down{color:var(--down)} .state.none{color:var(--muted)}
+.fx{font-family:var(--f-mono);font-size:.9rem;color:var(--ink)}
+.note{font-size:.84rem;color:var(--muted);margin:0}
+.vlink{font:inherit;font-size:.86rem;font-weight:600;color:var(--down);background:transparent;border:1px solid var(--down);border-radius:999px;padding:6px 14px;cursor:pointer;justify-self:start}
+.vlink[aria-expanded=&quot;true&quot;]{background:var(--down);color:var(--bg)}
+.vlink:focus-visible,.vbox button:focus-visible{outline:2px solid var(--down);outline-offset:2px}
+.vbox{position:relative;width:300px;max-width:100%;background:#0E1626;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.vbox video{display:block;width:100%;aspect-ratio:16/9;height:auto;background:#0E1626}
+.vbox .vclose{position:absolute;top:6px;right:6px;z-index:2;width:26px;height:26px;border-radius:50%;border:1px solid rgba(244,239,230,.5);background:rgba(14,22,38,.75);color:#F4EFE6;font-size:14px;line-height:1;cursor:pointer}
+.vbox .vmiss{margin:0;padding:12px 40px 12px 14px;font-size:.82rem;color:#F4EFE6}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+label.sl{display:grid;gap:4px;font-size:.82rem;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--down)}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+&lt;/style&gt;
+&lt;style&gt;body{margin:0}&lt;/style&gt;
+&lt;style&gt;
+/* embedded in the Section 4.2 deck */
+body{font-size:21px;padding:10px 14px 10px}
+header,#picker{display:none!important}
+body:not(.triple) .vlink,body:not(.triple) .vbox{display:none!important}
+body.triple .strip,body.triple .read{display:none!important}
+body.triple .main{grid-template-columns:minmax(0,1fr) 260px}
+.vlink{font-size:.78rem}
+.vbox{width:100%}
+.wrap{max-width:none;gap:10px}
+.picker button{font-size:.8rem;padding:5px 14px}
+.main{grid-template-columns:minmax(0,1fr) 360px;gap:14px}
+.pen button{font-size:.75rem}
+.pen .sw{width:24px;height:24px}
+.read{padding:12px 16px;gap:4px}
+.row{font-size:.9rem}
+.fx{font-size:.88rem}
+.state{font-size:1.06rem;padding:8px 10px}
+.legend,label.sl{font-size:.8rem}
+input[type=range]{height:30px}
+.note{font-size:.8rem;line-height:1.45}
+.xbtn{font:inherit;font-size:.78rem;font-weight:600;color:var(--down);background:transparent;border:1px solid var(--down);border-radius:999px;padding:5px 14px;cursor:pointer;justify-self:start}
+.xbtn[aria-expanded=&quot;true&quot;]{background:var(--down);color:var(--bg)}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+
+&lt;div class=&quot;wrap&quot;&gt;
+  &lt;header&gt;
+    &lt;div&gt;
+      &lt;div class=&quot;eyebrow&quot;&gt;Section 4.2 · Faculty seminar&lt;/div&gt;
+      &lt;h1&gt;Concavity Explorer&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;p class=&quot;lede&quot;&gt;Drag the point along the curve, or turn on the pen to write on the graph. The tangent line, the slope f′(x) and the sign of f″(x) follow it; the curve is coloured by concavity.&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;div class=&quot;picker&quot; id=&quot;picker&quot; role=&quot;group&quot; aria-label=&quot;Choose a function&quot;&gt;&lt;/div&gt;
+
+  &lt;div class=&quot;main&quot;&gt;
+    &lt;div class=&quot;board&quot;&gt;
+      &lt;canvas id=&quot;cv&quot; width=&quot;900&quot; height=&quot;540&quot; tabindex=&quot;0&quot; aria-label=&quot;Graph of the selected function with a draggable point&quot;&gt;&lt;/canvas&gt;
+      &lt;canvas id=&quot;ink&quot; aria-hidden=&quot;true&quot;&gt;&lt;/canvas&gt;
+      &lt;div class=&quot;pen&quot; role=&quot;group&quot; aria-label=&quot;Pen&quot;&gt;
+        &lt;button type=&quot;button&quot; id=&quot;penBtn&quot; aria-pressed=&quot;false&quot;&gt;Pen&lt;/button&gt;
+        &lt;button type=&quot;button&quot; class=&quot;sw&quot; data-c=&quot;#E8C27A&quot; aria-label=&quot;Gold pen&quot; style=&quot;--c:#E8C27A&quot;&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; class=&quot;sw&quot; data-c=&quot;#E4572E&quot; aria-label=&quot;Red pen&quot; style=&quot;--c:#E4572E&quot;&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; class=&quot;sw&quot; data-c=&quot;#5FC2B4&quot; aria-label=&quot;Teal pen&quot; style=&quot;--c:#5FC2B4&quot;&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; id=&quot;clrBtn&quot;&gt;Clear&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;strip&quot;&gt;&lt;canvas id=&quot;sg&quot; width=&quot;900&quot; height=&quot;60&quot; aria-label=&quot;Sign of the second derivative&quot;&gt;&lt;/canvas&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;aside class=&quot;side&quot;&gt;
+      &lt;div class=&quot;read&quot; aria-live=&quot;polite&quot;&gt;
+        &lt;div class=&quot;fx&quot; id=&quot;fname&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;row&quot;&gt;&lt;span&gt;x&lt;/span&gt;&lt;span id=&quot;rx&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;row&quot;&gt;&lt;span&gt;f(x)&lt;/span&gt;&lt;span id=&quot;rf&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;row&quot;&gt;&lt;span&gt;f′(x)  slope&lt;/span&gt;&lt;span id=&quot;rd1&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;row&quot;&gt;&lt;span&gt;f″(x)&lt;/span&gt;&lt;span id=&quot;rd2&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;row&quot; id=&quot;rtrRow&quot; hidden&gt;&lt;span&gt;f′ is&lt;/span&gt;&lt;span id=&quot;rtr&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;state&quot; id=&quot;rs&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;label class=&quot;sl&quot; for=&quot;xs&quot;&gt;Move the point
+        &lt;input type=&quot;range&quot; id=&quot;xs&quot; min=&quot;0&quot; max=&quot;1000&quot; value=&quot;300&quot;&gt;
+      &lt;/label&gt;
+      &lt;div class=&quot;legend&quot;&gt;
+        &lt;span&gt;&lt;i style=&quot;background:var(--up)&quot;&gt;&lt;/i&gt;concave up · f″ &amp;gt; 0&lt;/span&gt;
+        &lt;span&gt;&lt;i style=&quot;background:var(--down)&quot;&gt;&lt;/i&gt;concave down · f″ &amp;lt; 0&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;button type=&quot;button&quot; class=&quot;xbtn&quot; id=&quot;xbtn&quot; aria-expanded=&quot;false&quot;&gt;Explanation&lt;/button&gt;
+      &lt;p class=&quot;note&quot; id=&quot;fnote&quot; hidden&gt;&lt;/p&gt;
+      &lt;button type=&quot;button&quot; class=&quot;vlink&quot; id=&quot;vlink&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;vbox&quot; hidden&gt;▶ Procedure: intervals of concavity &amp;amp; inflection points&lt;/button&gt;
+      &lt;div class=&quot;vbox&quot; id=&quot;vbox&quot; hidden&gt;
+        &lt;button type=&quot;button&quot; class=&quot;vclose&quot; id=&quot;vclose&quot; aria-label=&quot;Close video&quot;&gt;✕&lt;/button&gt;
+        &lt;video id=&quot;vid&quot; controls playsinline preload=&quot;none&quot; src=&quot;concavity-procedure.mp4&quot;&gt;&lt;/video&gt;
+        &lt;p class=&quot;vmiss&quot; id=&quot;vmiss&quot; hidden&gt;Video not found: place &lt;b&gt;concavity-procedure.mp4&lt;/b&gt; in the same folder as this page.&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/aside&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+const cbrt = Math.cbrt;
+const F = [
+  {id:&quot;cube&quot;, label:&quot;x³&quot;, triple:true, name:&quot;f(x) = x³&quot;, x0:-2.2, x1:2.2, y0:-9, y1:9, dom:[-2,2],
+   f:x=&gt;x**3, d1:x=&gt;3*x*x, d2:x=&gt;6*x, ip:[[0,0]],
+   panels:[
+     {g:x=&gt;x**3,  tan:x=&gt;3*x*x, y0:-9.5, y1:9.5,  ticks:[-8,-4,4,8],   label:&quot;y = f(x) = x³&quot;,   ipLabel:&quot;inflection (0, 0)&quot;,
+      words:[[&quot;concave down&quot;,-1.05,4.5,&quot;down&quot;,&quot;center&quot;],[&quot;concave up&quot;,1.45,-5,&quot;up&quot;,&quot;center&quot;]]},
+     {g:x=&gt;3*x*x, tan:x=&gt;6*x,   y0:-1.8, y1:13.5, ticks:[4,8,12],      label:&quot;y = f′(x) = 3x²&quot;, ipLabel:&quot;minimum of f′&quot;,
+      words:[[&quot;f′ decreasing&quot;,-0.18,6,&quot;down&quot;,&quot;right&quot;],[&quot;f′ increasing&quot;,0.18,6,&quot;up&quot;,&quot;left&quot;]]},
+     {g:x=&gt;6*x,   shade:true,   y0:-13.5, y1:13.5, ticks:[-12,-6,6,12], label:&quot;y = f″(x) = 6x&quot;,  ipLabel:&quot;f″ changes sign&quot;,
+      words:[[&quot;f″ &lt; 0&quot;,-1.1,7,&quot;down&quot;,&quot;center&quot;],[&quot;f″ &gt; 0&quot;,1.45,-8,&quot;up&quot;,&quot;center&quot;]]}],
+   note:&quot;f′(x) = 3x², f″(x) = 6x. On (−∞, 0): f′ is decreasing, f″ &lt; 0, so f is concave down. On (0, ∞): f′ is increasing, f″ &gt; 0, so f is concave up. At x = 0, f′ has its minimum and f″ changes sign: (0, 0) is an inflection point. Note f′(0) = 0 as well, yet x = 0 is not an extremum.&quot;},
+  {id:&quot;rp1&quot;, label:&quot;Related Problem 1&quot;, mode:&quot;deriv&quot;, name:&quot;given: the graph of y = f′(x)&quot;, x0:-5, x1:5, y0:-8, y1:8, dom:[-5,5],
+   f:x=&gt;0, d1:x=&gt;0.5*(x**5/5+x**4/4-7*x**3/3-x*x/2+6*x)-1, d2:x=&gt;0.5*(x+3)*(x+1)*(x-1)*(x-2),
+   ip:[[-3,5.075],[-1,-3.0583],[1,0.8083],[2,-0.1333]],
+   note:&quot;Only f′ is given. The tangent to the graph of f′ has slope f″. Where f′ is increasing (f″ &gt; 0), f is concave up: (−∞, −3), (−1, 1), (2, ∞). Where f′ is decreasing (f″ &lt; 0), f is concave down: (−3, −1), (1, 2). Graph redrawn with the same turning points as Figure 4.2.4.&quot;},
+  {id:&quot;e2&quot;, label:&quot;Example 2&quot;, mode:&quot;deriv&quot;, f2plot:true, name:&quot;given: the graphs of y = f′(x) and y = f″(x)&quot;, x0:-1.6, x1:2.1, y0:-4, y1:6, dom:[-1.5,2],
+   f:x=&gt;0, d1:x=&gt;5*x**3/3-1.5*x*x-2*x, d2:x=&gt;5*x*x-3*x-2,
+   ip:[[-0.4,0.45333],[1,-1.83333]],
+   note:&quot;f″ &gt; 0 on (−∞, −2/5) and (1, ∞): f′ increasing, so f is concave up there. f″ &lt; 0 on (−2/5, 1): f′ decreasing, so f is concave down. f″ changes sign at x = −2/5 and x = 1: the x-coordinates of the inflection points of f. Graphs redrawn with the same zeros of f″ as Figure 4.2.7.&quot;},
+  {id:&quot;e3&quot;, label:&quot;Example 3&quot;, name:&quot;f(x) = x³ − 6x² + 9x + 30&quot;, x0:-1.5, x1:5.5, y0:0, y1:52, dom:[-1.5,5.5],
+   f:x=&gt;x**3-6*x*x+9*x+30, d1:x=&gt;3*x*x-12*x+9, d2:x=&gt;6*x-12, ip:[[2,32]],
+   note:&quot;f″(x) = 6x − 12. Concave down on (−∞, 2), concave up on (2, ∞); inflection point (2, 32).&quot;},
+  {id:&quot;e6&quot;, label:&quot;Example 6&quot;, name:&quot;f(x) = (x + 3) / (x − 5)&quot;, x0:-15, x1:20, y0:-10, y1:10, dom:[-15,20], gap:5,
+   f:x=&gt;(x+3)/(x-5), d1:x=&gt;-8/(x-5)**2, d2:x=&gt;16/(x-5)**3, ip:[], asym:{x:5,y:1},
+   note:&quot;f″(x) = 16/(x − 5)³. Concavity changes around x = 5, but 5 ∉ D_f, so there is no inflection point.&quot;},
+  {id:&quot;e8&quot;, label:&quot;Example 8&quot;, name:&quot;f(x) = x^(2/3) (1 − x)&quot;, x0:-2, x1:2, y0:-1.2, y1:5, dom:[-2,2], cusp:0,
+   f:x=&gt;cbrt(x*x)*(1-x), d1:x=&gt;(2-5*x)/(3*cbrt(x)), d2:x=&gt;-2*(5*x+1)/(9*cbrt(x)**4),
+   ip:[[-0.2, 1.2*cbrt(1/25)]],
+   note:&quot;f″ = −2(5x + 1)/(9x^(4/3)). f″ does not exist at x = 0 but keeps its sign there: no inflection at 0. Only inflection point: (−1/5, (6/5)∛(1/25)) ≈ (−0.2, 0.41).&quot;},
+  {id:&quot;e9&quot;, label:&quot;Example 9&quot;, name:&quot;f(x) = x + sin x,  0 ≤ x ≤ 2π&quot;, x0:0, x1:6.6, y0:0, y1:7, dom:[0,2*Math.PI],
+   f:x=&gt;x+Math.sin(x), d1:x=&gt;1+Math.cos(x), d2:x=&gt;-Math.sin(x), ip:[[Math.PI,Math.PI]],
+   note:&quot;f″(x) = −sin x. Concave down on (0, π), concave up on (π, 2π); (π, π) is the only inflection point.&quot;},
+  {id:&quot;e10&quot;, label:&quot;Example 10 (1)&quot;, name:&quot;f(x) = 3x⁴ − 4x³ − 6x² + 12x + 1,  [−2, 2]&quot;, x0:-2.1, x1:2.1, y0:-20, y1:50, dom:[-2,2],
+   f:x=&gt;3*x**4-4*x**3-6*x*x+12*x+1, d1:x=&gt;12*x**3-12*x*x-12*x+12, d2:x=&gt;36*x*x-24*x-12,
+   ip:[[-1/3,-94/27],[1,6]],
+   note:&quot;f″(x) = 12(3x + 1)(x − 1). Inflection points (−1/3, −94/27) and (1, 6). Relative minimum at x = −1; at x = 1, f′ = 0 but no extremum.&quot;},
+];
+
+const cv = document.getElementById(&quot;cv&quot;), ctx = cv.getContext(&quot;2d&quot;);
+const sg = document.getElementById(&quot;sg&quot;), sctx = sg.getContext(&quot;2d&quot;);
+const xs = document.getElementById(&quot;xs&quot;);
+let cur = F[1], px = 0.5, W = 900, H = 540, SW = 900, SH = 60;
+
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function size(){
+  const r = cv.getBoundingClientRect(), dpr = (window.devicePixelRatio || 1) * 2;
+  W = Math.max(280, r.width); { const room = window.innerHeight - r.top - (cur.triple ? 0 : 66) - 30; H = Math.max(240, Math.min(Math.round(W * (cur.triple ? 1.08 : 0.62)), Math.round(room))); }
+  cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + &quot;px&quot;; ctx.setTransform(dpr,0,0,dpr,0,0);
+  const s = sg.getBoundingClientRect(); SW = Math.max(240, s.width); SH = cur.triple ? 118 : 66;
+  sg.width = SW * dpr; sg.height = SH * dpr; sg.style.height = SH + &quot;px&quot;; sctx.setTransform(dpr,0,0,dpr,0,0);
+}
+const PAD = {l:54, r:18, t:18, b:34};
+const X = x =&gt; PAD.l + (x - cur.x0) / (cur.x1 - cur.x0) * (W - PAD.l - PAD.r);
+const Y = y =&gt; H - PAD.b - (y - cur.y0) / (cur.y1 - cur.y0) * (H - PAD.t - PAD.b);
+const invX = p =&gt; cur.x0 + (p - PAD.l) / (W - PAD.l - PAD.r) * (cur.x1 - cur.x0);
+const fmt = v =&gt; (!isFinite(v) ? &quot;undefined&quot; : (Math.abs(v) &lt; 5e-10 ? &quot;0&quot; : v.toFixed(3)));
+
+function niceStep(span){ const s = span / 8, p = 10 ** Math.floor(Math.log10(s)), m = s / p; return (m &lt; 1.5 ? 1 : m &lt; 3.5 ? 2 : m &lt; 7.5 ? 5 : 10) * p; }
+
+const val = x =&gt; cur.mode === &quot;deriv&quot; ? cur.d1(x) : cur.f(x);
+const slope = x =&gt; cur.mode === &quot;deriv&quot; ? cur.d2(x) : cur.d1(x);
+// Three stacked panels for the x³ tab: f, f′, f″ share one x-axis and one moving point.
+function drawTriple(){
+  const line = css(&quot;--line&quot;), muted = css(&quot;--muted&quot;), up = css(&quot;--up&quot;), down = css(&quot;--down&quot;), ink = css(&quot;--ink&quot;),
+        tanC = css(&quot;--tan&quot;), pt = css(&quot;--point&quot;), bg = css(&quot;--bg&quot;), mono = css(&quot;--f-mono&quot;), body = css(&quot;--f-body&quot;);
+  ctx.clearRect(0,0,W,H);
+  const gap = 18, top = PAD.t, bot = H - PAD.b, ph = (bot - top - 2 * gap) / 3, XL = PAD.l, XR = W - PAD.r;
+  const x = pointX(), N = 600, a = cur.dom[0], b = cur.dom[1];
+  const colAt = u =&gt; { const s = cur.d2(u); return s &gt; 0 ? up : (s &lt; 0 ? down : ink); };
+  cur.panels.forEach((P, k) =&gt; {
+    const t = top + k * (ph + gap), bt = t + ph, Yp = y =&gt; bt - (y - P.y0) / (P.y1 - P.y0) * ph;
+    // frame + grid
+    ctx.strokeStyle = line; ctx.lineWidth = 1; ctx.globalAlpha = .7; ctx.strokeRect(XL, t, XR - XL, ph);
+    ctx.globalAlpha = .4;
+    for (let u = -2; u &lt;= 2; u++){ ctx.beginPath(); ctx.moveTo(X(u), t); ctx.lineTo(X(u), bt); ctx.stroke(); }
+    P.ticks.forEach(v =&gt; { ctx.beginPath(); ctx.moveTo(XL, Yp(v)); ctx.lineTo(XR, Yp(v)); ctx.stroke(); });
+    ctx.globalAlpha = 1; ctx.font = &quot;17px &quot; + mono; ctx.fillStyle = muted; ctx.textAlign = &quot;right&quot;;
+    P.ticks.forEach(v =&gt; ctx.fillText(v, XL - 5, Yp(v) + 4));
+    ctx.textAlign = &quot;left&quot;;
+    // axes
+    ctx.strokeStyle = muted; ctx.lineWidth = 1.2; ctx.beginPath();
+    ctx.moveTo(XL, Yp(0)); ctx.lineTo(XR, Yp(0)); ctx.moveTo(X(0), t); ctx.lineTo(X(0), bt); ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.rect(XL, t, XR - XL, ph); ctx.clip();
+    // shaded area between f″ and the x-axis
+    if (P.shade){ ctx.globalAlpha = .2;
+      [[a, 0, down], [0, b, up]].forEach(([p, q, c]) =&gt; { ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(X(p), Yp(0));
+        for (let i = 0; i &lt;= 120; i++){ const u = p + (q - p) * i / 120; ctx.lineTo(X(u), Yp(P.g(u))); }
+        ctx.lineTo(X(q), Yp(0)); ctx.closePath(); ctx.fill(); });
+      ctx.globalAlpha = 1; }
+    // curve coloured by sign of f″ (same colour code in all three panels)
+    ctx.lineWidth = 4; ctx.lineCap = &quot;round&quot;;
+    for (let i = 1; i &lt;= N; i++){ const u0 = a + (b - a) * (i - 1) / N, u1 = a + (b - a) * i / N;
+      ctx.strokeStyle = colAt((u0 + u1) / 2); ctx.beginPath(); ctx.moveTo(X(u0), Yp(P.g(u0))); ctx.lineTo(X(u1), Yp(P.g(u1))); ctx.stroke(); }
+    // words placed in the empty side of each panel
+    ctx.font = &quot;600 19px &quot; + body;
+    P.words.forEach(([w, u, v, c, al]) =&gt; { ctx.fillStyle = c === &quot;up&quot; ? up : down; ctx.textAlign = al; ctx.fillText(w, X(u), Yp(v)); });
+    ctx.textAlign = &quot;left&quot;;
+    // tangent: slope f′ on the f-panel, slope f″ on the f′-panel
+    const yv = P.g(x);
+    if (P.tan){ const m = P.tan(x), sp = 0.85; ctx.strokeStyle = tanC; ctx.lineWidth = 1.6; ctx.setLineDash([7,5]);
+      ctx.beginPath(); ctx.moveTo(X(x - sp), Yp(yv - m * sp)); ctx.lineTo(X(x + sp), Yp(yv + m * sp)); ctx.stroke(); ctx.setLineDash([]); }
+    // drop line on the f″-panel: its length and side show the sign
+    if (P.shade){ ctx.strokeStyle = colAt(x); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(X(x), Yp(0)); ctx.lineTo(X(x), Yp(yv)); ctx.stroke(); }
+    ctx.restore();
+    // panel title, centred at the top (the curves are away from there)
+    ctx.font = &quot;600 19px &quot; + mono; ctx.textAlign = &quot;center&quot;; const tw = ctx.measureText(P.label).width;
+    ctx.fillStyle = bg; ctx.globalAlpha = .85; ctx.fillRect((XL + XR) / 2 - tw / 2 - 8, t + 3, tw + 16, 27); ctx.globalAlpha = 1;
+    ctx.fillStyle = ink; ctx.fillText(P.label, (XL + XR) / 2, t + 23); ctx.textAlign = &quot;left&quot;;
+    // inflection marker at x = 0
+    ctx.fillStyle = ink; ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(0), Yp(P.g(0)), 6, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = ink; ctx.font = &quot;17px &quot; + body; ctx.fillText(P.ipLabel, X(0) + 12, Yp(P.g(0)) + (k === 1 ? 22 : 28));
+    // moving point
+    ctx.fillStyle = pt; ctx.beginPath(); ctx.arc(X(x), Yp(yv), 10, 0, 7); ctx.fill(); ctx.strokeStyle = bg; ctx.lineWidth = 2; ctx.stroke();
+  });
+  // one vertical guide through the three panels
+  ctx.strokeStyle = tanC; ctx.lineWidth = 1.2; ctx.setLineDash([3,4]); ctx.globalAlpha = .8;
+  ctx.beginPath(); ctx.moveTo(X(x), top); ctx.lineTo(X(x), bot); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  // x tick labels under the last panel
+  ctx.font = &quot;17px &quot; + mono; ctx.fillStyle = muted; ctx.textAlign = &quot;center&quot;;
+  for (let u = -2; u &lt;= 2; u++) ctx.fillText(u, X(u), bot + 22);
+  ctx.textAlign = &quot;left&quot;;
+  drawStrip(x); readout(x);
+}
+
+function draw(){
+  if (cur.triple) return drawTriple();
+  const line = css(&quot;--line&quot;), muted = css(&quot;--muted&quot;), up = css(&quot;--up&quot;), down = css(&quot;--down&quot;), ink = css(&quot;--ink&quot;), tanC = css(&quot;--tan&quot;), pt = css(&quot;--point&quot;);
+  ctx.clearRect(0,0,W,H);
+  ctx.font = &quot;17px &quot; + css(&quot;--f-mono&quot;); ctx.fillStyle = muted; ctx.strokeStyle = line; ctx.lineWidth = 1;
+  // grid + ticks
+  const sx = niceStep(cur.x1 - cur.x0), sy = niceStep(cur.y1 - cur.y0);
+  for (let x = Math.ceil(cur.x0 / sx) * sx; x &lt;= cur.x1; x += sx){ ctx.globalAlpha = .45; ctx.beginPath(); ctx.moveTo(X(x), PAD.t); ctx.lineTo(X(x), H - PAD.b); ctx.stroke(); ctx.globalAlpha = 1;
+    if (Math.abs(x) &gt; 1e-9) ctx.fillText(+x.toFixed(2), X(x) - 8, Math.min(H - PAD.b + 20, Math.max(Y(0) + 20, PAD.t + 16))); }
+  for (let y = Math.ceil(cur.y0 / sy) * sy; y &lt;= cur.y1; y += sy){ ctx.globalAlpha = .45; ctx.beginPath(); ctx.moveTo(PAD.l, Y(y)); ctx.lineTo(W - PAD.r, Y(y)); ctx.stroke(); ctx.globalAlpha = 1;
+    if (Math.abs(y) &gt; 1e-9) ctx.fillText(+y.toFixed(2), Math.max(4, Math.min(X(0) - 44, W - 56)), Y(y) + 6); }
+  // axes
+  ctx.strokeStyle = muted; ctx.lineWidth = 1.2; ctx.beginPath();
+  if (cur.y0 &lt;= 0 &amp;&amp; cur.y1 &gt;= 0){ ctx.moveTo(PAD.l, Y(0)); ctx.lineTo(W - PAD.r, Y(0)); }
+  if (cur.x0 &lt;= 0 &amp;&amp; cur.x1 &gt;= 0){ ctx.moveTo(X(0), PAD.t); ctx.lineTo(X(0), H - PAD.b); }
+  ctx.stroke();
+  // asymptotes
+  if (cur.asym){ ctx.setLineDash([5,5]); ctx.beginPath(); ctx.moveTo(X(cur.asym.x), PAD.t); ctx.lineTo(X(cur.asym.x), H - PAD.b);
+    ctx.moveTo(PAD.l, Y(cur.asym.y)); ctx.lineTo(W - PAD.r, Y(cur.asym.y)); ctx.stroke(); ctx.setLineDash([]); }
+  // curve coloured by sign of f&#x27;&#x27;
+  ctx.save(); ctx.beginPath(); ctx.rect(PAD.l, PAD.t, W - PAD.l - PAD.r, H - PAD.t - PAD.b); ctx.clip();
+  const N = 900, a = cur.dom[0], b = cur.dom[1]; ctx.lineWidth = 4; ctx.lineCap = &quot;round&quot;;
+  let prev = null;
+  for (let i = 0; i &lt;= N; i++){
+    const x = a + (b - a) * i / N;
+    if (cur.gap !== undefined &amp;&amp; Math.abs(x - cur.gap) &lt; (b - a) / 300){ prev = null; continue; }
+    const y = val(x);
+    if (!isFinite(y) || y &lt; cur.y0 - 40 * (cur.y1 - cur.y0) || y &gt; cur.y1 + 40 * (cur.y1 - cur.y0)){ prev = null; continue; }
+    if (prev){ const xm = (x + prev[0]) / 2, s = cur.d2(xm);
+      ctx.strokeStyle = s &gt; 0 ? up : (s &lt; 0 ? down : ink);
+      ctx.beginPath(); ctx.moveTo(X(prev[0]), Y(prev[1])); ctx.lineTo(X(x), Y(y)); ctx.stroke(); }
+    prev = [x, y];
+  }
+  if (cur.f2plot){ ctx.strokeStyle = muted; ctx.lineWidth = 2; ctx.beginPath(); let st = false;
+    for (let i = 0; i &lt;= N; i++){ const u = a + (b - a) * i / N, v = cur.d2(u); if (!isFinite(v)){ st = false; continue; }
+      st ? ctx.lineTo(X(u), Y(v)) : ctx.moveTo(X(u), Y(v)); st = true; }
+    ctx.stroke();
+    ctx.fillStyle = muted; [-0.4, 1].forEach(z =&gt; { ctx.beginPath(); ctx.arc(X(z), Y(0), 4, 0, 7); ctx.fill(); }); }
+  if (cur.mode === &quot;deriv&quot;){ ctx.font = &quot;18px &quot; + css(&quot;--f-mono&quot;); ctx.fillStyle = ink;
+    ctx.fillText(&quot;coloured curve: y = f′(x)&quot;, PAD.l + 10, PAD.t + 20);
+    if (cur.f2plot){ ctx.fillStyle = muted; ctx.fillText(&quot;grey curve: y = f″(x)&quot;, PAD.l + 10, PAD.t + 44); } }
+  // tangent
+  const x = pointX(), y = val(x), m = slope(x);
+  if (isFinite(m) &amp;&amp; isFinite(y)){ ctx.strokeStyle = tanC; ctx.lineWidth = 1.6; ctx.setLineDash([7,5]); ctx.beginPath();
+    const span = (cur.x1 - cur.x0) * 0.28; ctx.moveTo(X(x - span), Y(y - m * span)); ctx.lineTo(X(x + span), Y(y + m * span)); ctx.stroke(); ctx.setLineDash([]); }
+  ctx.restore();
+  // inflection points
+  cur.ip.forEach(([u,v]) =&gt; { ctx.fillStyle = ink; ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(u), Y(v), 8, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = ink; ctx.font = &quot;17px &quot; + css(&quot;--f-body&quot;); ctx.fillText(cur.mode === &quot;deriv&quot; ? &quot;inflection x of f&quot; : &quot;inflection&quot;, X(u) + 9, Y(v) - 9); });
+  // point
+  if (isFinite(y)){ ctx.fillStyle = pt; ctx.beginPath(); ctx.arc(X(x), Y(y), 10, 0, 7); ctx.fill();
+    ctx.strokeStyle = css(&quot;--bg&quot;); ctx.lineWidth = 2; ctx.stroke(); }
+  drawStrip(x); readout(x);
+}
+
+function drawStrip(xp){
+  const up = css(&quot;--up&quot;), down = css(&quot;--down&quot;), muted = css(&quot;--muted&quot;), ink = css(&quot;--ink&quot;);
+  sctx.clearRect(0,0,SW,SH);
+  const L = PAD.l, R = SW - PAD.r, sxp = v =&gt; L + (v - cur.x0) / (cur.x1 - cur.x0) * (R - L);
+  if (cur.triple){
+    const off = sg.getBoundingClientRect().left - cv.getBoundingClientRect().left, sxp = v =&gt; X(v) - off;   // align with the panels above
+    // two aligned bars: trend of f′ and sign of f″ — same colours, same switch point
+    const rows = [[&quot;trend of f′(x)&quot;, &quot;decreasing&quot;, &quot;increasing&quot;, 26], [&quot;sign of f″(x)&quot;, &quot;negative  (−)&quot;, &quot;positive  (+)&quot;, 76]];
+    rows.forEach(([title, lw, rw, y]) =&gt; {
+      sctx.globalAlpha = .85;
+      sctx.fillStyle = down; sctx.fillRect(sxp(cur.dom[0]), y, sxp(0) - sxp(cur.dom[0]), 16);
+      sctx.fillStyle = up;   sctx.fillRect(sxp(0), y, sxp(cur.dom[1]) - sxp(0), 16);
+      sctx.globalAlpha = 1; sctx.font = &quot;16px &quot; + css(&quot;--f-mono&quot;); sctx.fillStyle = muted; sctx.textAlign = &quot;left&quot;;
+      sctx.fillText(title, L, y - 6);
+      sctx.font = &quot;600 17px &quot; + css(&quot;--f-body&quot;); sctx.textAlign = &quot;center&quot;;
+      sctx.fillStyle = down; sctx.fillText(lw, sxp(-0.6), y - 6);
+      sctx.fillStyle = up;   sctx.fillText(rw, sxp(1), y - 6);
+      sctx.textAlign = &quot;left&quot;; });
+    sctx.fillStyle = ink; sctx.beginPath(); const p = sxp(xp); sctx.moveTo(p, 96); sctx.lineTo(p - 8, 112); sctx.lineTo(p + 8, 112); sctx.fill();
+    return;
+  }
+  const a = cur.dom[0], b = cur.dom[1], N = 600;
+  for (let i = 0; i &lt; N; i++){ const u = a + (b - a) * (i + .5) / N;
+    if (cur.gap !== undefined &amp;&amp; Math.abs(u - cur.gap) &lt; (b - a) / 300) continue;
+    const s = cur.d2(u); if (!isFinite(s)) continue;
+    sctx.fillStyle = s &gt; 0 ? up : down; sctx.globalAlpha = .85;
+    sctx.fillRect(sxp(a + (b - a) * i / N), 26, (R - L) * (b - a) / (cur.x1 - cur.x0) / N + 1, 14); }
+  sctx.globalAlpha = 1; sctx.fillStyle = muted; sctx.font = &quot;16px &quot; + css(&quot;--f-mono&quot;);
+  sctx.fillText(&quot;sign of f″(x)&quot;, L, 18);
+  sctx.fillStyle = ink; sctx.beginPath(); const p = sxp(xp); sctx.moveTo(p, 44); sctx.lineTo(p - 8, 60); sctx.lineTo(p + 8, 60); sctx.fill();
+}
+
+function readout(x){
+  const trRow = document.getElementById(&quot;rtrRow&quot;);
+  trRow.hidden = !cur.triple;
+  if (cur.triple){
+    const d1 = cur.d1(x), d2 = cur.d2(x), z = Math.abs(x) &lt; 1e-9;
+    const r1 = document.getElementById(&quot;rd1&quot;), r2 = document.getElementById(&quot;rd2&quot;);
+    document.getElementById(&quot;rf&quot;).parentElement.hidden = false;
+    r1.previousElementSibling.textContent = &quot;f′(x)  slope of f&quot;;
+    r2.previousElementSibling.textContent = &quot;f″(x)  slope of f′&quot;;
+    document.getElementById(&quot;rx&quot;).textContent = fmt(x);
+    document.getElementById(&quot;rf&quot;).textContent = fmt(cur.f(x));
+    r1.textContent = fmt(d1);
+    r2.textContent = z ? &quot;0&quot; : fmt(d2);
+    const tr = document.getElementById(&quot;rtr&quot;);
+    tr.textContent = z ? &quot;at its minimum&quot; : (d2 &gt; 0 ? &quot;increasing&quot; : &quot;decreasing&quot;);
+    tr.style.color = z ? &quot;&quot; : (d2 &gt; 0 ? css(&quot;--up&quot;) : css(&quot;--down&quot;));
+    const st = document.getElementById(&quot;rs&quot;);
+    if (z){ st.className = &quot;state none&quot;; st.textContent = &quot;f″ = 0 — inflection point (also f′ = 0)&quot;; }
+    else if (d2 &gt; 0){ st.className = &quot;state up&quot;; st.textContent = &quot;f′ increasing ⇔ f″ &gt; 0 ⇒ concave up&quot;; }
+    else { st.className = &quot;state down&quot;; st.textContent = &quot;f′ decreasing ⇔ f″ &lt; 0 ⇒ concave down&quot;; }
+    return;
+  }
+  document.getElementById(&quot;rtr&quot;).style.color = &quot;&quot;;
+  const deriv = cur.mode === &quot;deriv&quot;;
+  const y = cur.f(x), d1 = cur.d1(x), d2 = cur.d2(x);
+  const rf = document.getElementById(&quot;rf&quot;), r1 = document.getElementById(&quot;rd1&quot;), r2 = document.getElementById(&quot;rd2&quot;);
+  rf.parentElement.hidden = deriv;
+  r1.previousElementSibling.textContent = deriv ? &quot;f′(x)  on the graph&quot; : &quot;f′(x)  slope&quot;;
+  r2.previousElementSibling.textContent = deriv ? &quot;f″(x)  slope of f′&quot; : &quot;f″(x)&quot;;
+  document.getElementById(&quot;rx&quot;).textContent = fmt(x);
+  rf.textContent = fmt(y);
+  r1.textContent = fmt(d1);
+  r2.textContent = !isFinite(d2) ? &quot;does not exist&quot; : (d2 &gt; 0 ? &quot;&gt; 0   &quot; : d2 &lt; 0 ? &quot;&lt; 0   &quot; : &quot;= 0   &quot;) + fmt(d2);
+  const st = document.getElementById(&quot;rs&quot;);
+  if (!isFinite(d2)){ st.className = &quot;state none&quot;; st.textContent = &quot;f″ does not exist here&quot;; }
+  else if (Math.abs(d2) &lt; 1e-6){ st.className = &quot;state none&quot;; st.textContent = deriv ? &quot;f″ = 0 — possible inflection of f&quot; : &quot;f″ = 0 — candidate point&quot;; }
+  else if (d2 &gt; 0){ st.className = &quot;state up&quot;; st.textContent = deriv ? &quot;f′ increasing ⇒ f concave up&quot; : &quot;concave up — graph above tangent&quot;; }
+  else { st.className = &quot;state down&quot;; st.textContent = deriv ? &quot;f′ decreasing ⇒ f concave down&quot; : &quot;concave down — graph below tangent&quot;; }
+}
+
+function pointX(){ const a = cur.dom[0], b = cur.dom[1]; let x = a + (b - a) * px;
+  if (cur.gap !== undefined &amp;&amp; Math.abs(x - cur.gap) &lt; 0.15) x = cur.gap + (x &lt; cur.gap ? -0.15 : 0.15);
+  if (cur.triple) x = Math.round(x * 1e4) / 1e4 || 0;   // lets keyboard steps land exactly on x = 0
+  return x; }
+
+function select(fn){
+  if (typeof ictx !== &quot;undefined&quot;) ictx.clearRect(0,0,W,H);
+  document.body.classList.toggle(&quot;triple&quot;, !!fn.triple); cur = fn; px = fn.id === &quot;e6&quot; ? 0.62 : 0.3; xs.value = Math.round(px * 1000);
+  if (typeof ictx !== &quot;undefined&quot;){ size(); sizeInk(); }   // the x³ tab uses a taller board
+  document.getElementById(&quot;fname&quot;).textContent = fn.name;
+  document.getElementById(&quot;fnote&quot;).textContent = fn.note;
+  if (typeof showVideo === &quot;function&quot;){ showVideo(false); document.getElementById(&quot;vlink&quot;).hidden = !fn.triple; }
+  document.querySelectorAll(&quot;#picker button&quot;).forEach(b =&gt; b.setAttribute(&quot;aria-pressed&quot;, b.dataset.id === fn.id));
+  draw();
+}
+
+const picker = document.getElementById(&quot;picker&quot;);
+F.forEach(fn =&gt; { const b = document.createElement(&quot;button&quot;); b.type = &quot;button&quot;; b.id = &quot;pick-&quot; + fn.id; b.dataset.id = fn.id; b.textContent = fn.label;
+  b.addEventListener(&quot;click&quot;, () =&gt; select(fn)); picker.appendChild(b); });
+
+function setFromClient(clientX){ const r = cv.getBoundingClientRect(); const x = invX(clientX - r.left);
+  px = Math.min(1, Math.max(0, (x - cur.dom[0]) / (cur.dom[1] - cur.dom[0]))); xs.value = Math.round(px * 1000); draw(); }
+let dragging = false;
+cv.addEventListener(&quot;pointerdown&quot;, e =&gt; { dragging = true; cv.setPointerCapture(e.pointerId); setFromClient(e.clientX); });
+cv.addEventListener(&quot;pointermove&quot;, e =&gt; { if (dragging) setFromClient(e.clientX); });
+cv.addEventListener(&quot;pointerup&quot;, () =&gt; dragging = false);
+cv.addEventListener(&quot;keydown&quot;, e =&gt; { if (e.key === &quot;ArrowRight&quot; || e.key === &quot;ArrowLeft&quot;){ px = Math.min(1, Math.max(0, px + (e.key === &quot;ArrowRight&quot; ? .005 : -.005))); xs.value = Math.round(px * 1000); draw(); e.preventDefault(); } });
+xs.addEventListener(&quot;input&quot;, () =&gt; { px = xs.value / 1000; draw(); });
+window.addEventListener(&quot;resize&quot;, () =&gt; { size(); sizeInk(); draw(); });
+matchMedia(&quot;(prefers-color-scheme: dark)&quot;).addEventListener(&quot;change&quot;, draw);
+new MutationObserver(draw).observe(document.documentElement, {attributes:true, attributeFilter:[&quot;data-theme&quot;]});
+const ink = document.getElementById(&quot;ink&quot;), ictx = ink.getContext(&quot;2d&quot;); let penOn = false, penC = &quot;#E8C27A&quot;, drawing = false;
+function sizeInk(){ const dpr = (window.devicePixelRatio || 1) * 2; ink.width = W * dpr; ink.height = H * dpr; ink.style.height = H + &quot;px&quot;; ictx.setTransform(dpr,0,0,dpr,0,0); }
+document.getElementById(&quot;penBtn&quot;).addEventListener(&quot;click&quot;, e =&gt; { penOn = !penOn; e.currentTarget.setAttribute(&quot;aria-pressed&quot;, penOn); ink.classList.toggle(&quot;on&quot;, penOn); });
+document.querySelectorAll(&quot;.pen .sw&quot;).forEach(b =&gt; b.addEventListener(&quot;click&quot;, () =&gt; { penC = b.dataset.c; document.querySelectorAll(&quot;.pen .sw&quot;).forEach(o =&gt; o.classList.toggle(&quot;sel&quot;, o === b));
+  if (!penOn) document.getElementById(&quot;penBtn&quot;).click(); }));
+document.querySelector(&#x27;.pen .sw&#x27;).classList.add(&quot;sel&quot;);
+document.getElementById(&quot;clrBtn&quot;).addEventListener(&quot;click&quot;, () =&gt; ictx.clearRect(0,0,W,H));
+ink.addEventListener(&quot;pointerdown&quot;, e =&gt; { drawing = true; ink.setPointerCapture(e.pointerId); const r = ink.getBoundingClientRect();
+  ictx.strokeStyle = penC; ictx.lineWidth = 3; ictx.lineCap = &quot;round&quot;; ictx.lineJoin = &quot;round&quot;; ictx.beginPath(); ictx.moveTo(e.clientX - r.left, e.clientY - r.top); });
+ink.addEventListener(&quot;pointermove&quot;, e =&gt; { if (!drawing) return; const r = ink.getBoundingClientRect(); ictx.lineTo(e.clientX - r.left, e.clientY - r.top); ictx.stroke(); });
+ink.addEventListener(&quot;pointerup&quot;, () =&gt; drawing = false);
+// Procedure video (x³ tab only): opens in the side column, native controls incl. fullscreen
+const vlink = document.getElementById(&quot;vlink&quot;), vbox = document.getElementById(&quot;vbox&quot;), vid = document.getElementById(&quot;vid&quot;), vmiss = document.getElementById(&quot;vmiss&quot;);
+function showVideo(on){
+  vbox.hidden = !on; vlink.setAttribute(&quot;aria-expanded&quot;, on);
+  if (on){ vid.play().catch(() =&gt; {}); } else { vid.pause(); }
+}
+vlink.addEventListener(&quot;click&quot;, () =&gt; showVideo(vbox.hidden));
+document.getElementById(&quot;vclose&quot;).addEventListener(&quot;click&quot;, () =&gt; { showVideo(false); vlink.focus(); });
+vid.addEventListener(&quot;error&quot;, () =&gt; { vid.hidden = true; vmiss.hidden = false; });
+function fromHash(){ const h = (location.hash || &quot;&quot;).replace(&quot;#&quot;,&quot;&quot;); return F.find(f =&gt; f.id === h); }
+window.addEventListener(&quot;hashchange&quot;, () =&gt; { const f = fromHash(); if (f) select(f); });
+document.getElementById(&quot;xbtn&quot;).addEventListener(&quot;click&quot;, e =&gt; { const n = document.getElementById(&quot;fnote&quot;); n.hidden = !n.hidden; e.currentTarget.setAttribute(&quot;aria-expanded&quot;, !n.hidden); });
+size(); sizeInk(); select(fromHash() || F[0]);
+document.fonts &amp;&amp; document.fonts.ready.then(draw);
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">الـ Explorer: يبدأ بتبويب x³ (الرسوم الثلاثة f و f′ و f″ بنقطة واحدة متحركة). اسحب النقطة أو استخدم المنزلق. باقي التبويبات هي أمثلة السيمينار. Space يكمل العرض، والأسهم داخل الـ Explorer تحرّك النقطة بعد الضغط عليه.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Related Problem 1">
+<div class="sl"><div class="sl-top"><span class="num">1</span><span class="bt">Concavity</span><span class="line"></span><span class="it">Related Problem 1</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-rel">Related Problem 1</span><div class="prob-q"><span class="qb">Use the graph of $y = f'(x)$, given in the figure, to find the following: <b>1.</b> the intervals on which $f$ is concave up; <b>2.</b> the intervals on which $f$ is concave down.</span></div></div><div class="work two even"><div><div class="glass figcard "><div class="plot-host" data-fig="rp1"></div><div class="caption">graph redrawn with the same turning points as Figure 4.2.4</div></div></div><div><div class="answer fragment"  data-fragment-index="1"><span class="k">1 · concave up</span>$f'$ is increasing on $(-\infty,-3),\ (-1,1),\ (2,\infty)$<br>$\Rightarrow$ $f$ is <b>concave up</b> on <span class="cu">$(-\infty,-3),\ (-1,1),\ (2,\infty)$</span></div><div class="answer gold fragment"  data-fragment-index="2"><span class="k">2 · concave down</span>$f'$ is decreasing on $(-3,-1),\ (1,2)$<br>$\Rightarrow$ $f$ is <b>concave down</b> on <span class="cd">$(-3,-1),\ (1,2)$</span></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">المعطى رسم f′ فقط. حيث f′ تزايدية f مقعرة لأعلى، وحيث f′ تناقصية f مقعرة لأسفل. نقاط التحول لـ f′: −3, −1, 1, 2. <br>عدد الضغطات في الشريحة: 2.</div></aside>
+</section>
+</section>
+<section>
+<section data-zmax="1.25" data-valign="center" data-item="Definition 4.2.2 · Theorem 4.2.2">
+<div class="sl"><div class="sl-top"><span class="num">2</span><span class="bt">Inflection points</span><span class="line"></span><span class="it">Definition 4.2.2 · Theorem 4.2.2</span></div><div class="sl-main"><div class="sl-fit">
+<div class="work two wide"><div><div class="box def" ><div class="box-head"><span class="box-kind">Definition 4.2.2</span><span class="box-name">Inflection Point</span></div><div class="box-body">Let $f$ be a continuous function on an open interval $I$ and $x_0\in I$. Then the point $(x_0, f(x_0))$ is said to be an <b>inflection point</b> if $f(x)$ changes its concavity (upward to downward or downward to upward) around $x_0$.</div></div><div class="box thm fragment"  data-fragment-index="1"><div class="box-head"><span class="box-kind">Theorem 4.2.2</span><span class="box-name">Points of Inflection</span></div><div class="box-body">Let $(c, f(c))$ be a point of inflection of the graph of the function $f$. Then, either $f''(c) = 0$, or $f''(c)$ does not exist.</div></div></div><div><div class="fragment" data-fragment-index="2"><div class="glass figcard "><div class="plot-host" data-fig="cube"></div><div class="caption">$y = x^3$: the concavity changes at $(0,0)$</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">تعريف نقطة الانقلاب: f متصلة و x₀ داخل الفترة والتقعر يتغير حولها. ثم النظرية: المرشحون هم f″ = 0 أو f″ غير موجودة. ثم مثال x³ عند (0, 0). <br>عدد الضغطات في الشريحة: 2.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Example 2">
+<div class="sl"><div class="sl-top"><span class="num">2</span><span class="bt">Inflection points</span><span class="line"></span><span class="it">Example 2</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-ex">Example 2</span><div class="prob-q"><span class="qb">Consider the graphs of $y = f'(x)$ and $y = f''(x)$. Determine: <b>1.</b> the intervals on which $f$ is concave up; <b>2.</b> the intervals on which $f$ is concave down; <b>3.</b> the $x$-coordinates of all inflection points of $f(x)$ (if any).</span></div></div><div class="work two even"><div><div class="glass figcard "><div class="plot-host" data-fig="ex2"></div><div class="caption">graphs redrawn with the same zeros of $f''$ as Figure 4.2.7</div></div></div><div><p style="margin:0 0 6px;color:var(--text-lo)">Using the graphs and the test for concavity:</p><div class="answer fragment"  data-fragment-index="1"><span class="k">1</span>$f$ is concave up on <span class="cu">$\left(-\infty,-\tfrac25\right),\ (1,\infty)$</span></div><div class="answer gold fragment"  data-fragment-index="2"><span class="k">2</span>$f$ is concave down on <span class="cd">$\left(-\tfrac25,\,1\right)$</span></div><div class="answer rose fragment"  data-fragment-index="3"><span class="k">3</span>Inflection points of $f$ occur at $x=-\tfrac25$ and $x=1$</div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">الإشارة تُقرأ من منحنى f″ (الأحمر): موجبة خارج الصفرين −2/5 و 1، وسالبة بينهما. الصفران هما الإحداثيات x لنقاط الانقلاب. <br>عدد الضغطات في الشريحة: 3.</div></aside>
+</section>
+</section>
+<section>
+<section data-zmax="1.0" data-valign="center" data-item="Procedure · video" data-prevent-swipe>
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Procedure · video</span></div><div class="sl-main"><div class="sl-fit">
+<div class="work two vid"><div><div class="glass vidcard"><video id="procvid" controls playsinline preload="metadata"><source src="concavity-procedure.mp4" type="video/mp4"></video><div class="vidmiss">Video not found: upload <b>&nbsp;concavity-procedure.mp4&nbsp;</b> to the same folder as this page.</div></div></div><div><div class="box thm"><div class="box-head"><span class="box-kind">Procedure</span><span class="box-name">intervals of concavity &amp; inflection points</span></div><div class="box-body"><ol class="proc"><li>Find $D_f$, then $f'$ and $f''$.</li><li>Find the points where $f''(x)=0$ or $f''(x)$ does not exist.</li><li>Put them on the number line of $f''$ and find its sign on each interval.</li><li>$f'' &gt; 0 \Rightarrow$ <span class="cu">concave up</span>; $f'' &lt; 0 \Rightarrow$ <span class="cd">concave down</span>.</li><li>Inflection point at $c$ if the sign changes around $c$ <b>and</b> $c\in D_f$.</li></ol></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">الفيديو يشرح الطريقة العامة: خط إشارة f″ ثم أسهم f′ ثم أقواس التقعر لـ f. في الأمثلة التالية نستخدم خط f″ وخط f فقط. الفيديو يحتاج ملف concavity-procedure.mp4 بجانب الصفحة.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Example 3">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 3</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-ex">Example 3</span><div class="prob-q"><span class="qb">For $f(x) = x^3 - 6x^2 + 9x + 30$, find the intervals on which $f$ is concave up or down, and find all inflection points (if any).</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sx">$f$ is a polynomial:</span><span class="sm">$D_f=\mathbb{R}$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$f'(x) = 3x^2 - 12x + 9$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$f''(x) = 6x - 12$</span></li><li class="fragment" data-fragment-index="4"><span class="sm">$f''(x)=0 \;\Rightarrow\; 6x-12=0$</span><span class="sm">$\Rightarrow\; x=2$</span></li></ol></div><div><div class="glass nl"><div class="nl-head">Sign of $f''$ &nbsp;⟹&nbsp; concavity of $f$</div><div class="nl-body"><div class="nl-row one"><div class="nl-lab"><span class="lf">$f(x)$</span><span class="lf2">$f''(x)$</span></div><div class="nl-track"><span class="fragment" data-fragment-index="5"><div class="nl-axis"></div><span class="nl-pt " style="left:50%"></span><span class="nl-pl" style="left:50%">$2$</span></span><span class="fragment nlsigns" data-fragment-index="6"><span class="nl-sg neg" style="left:25.0%">−</span><span class="nl-sg pos" style="left:75.0%">+</span></span><span class="fragment" data-fragment-index="7"><span class="nl-arc dn" style="left:25.0%"><svg viewBox="0 0 132 56"><path d="M8 52 Q66 -18 124 52"/></svg><span>c.D</span></span><span class="nl-arc up" style="left:75.0%"><svg viewBox="0 0 132 56"><path d="M8 8 Q66 78 124 8"/></svg><span>c.u</span></span></span></div></div></div><div class="nl-res"><div class="fragment" data-fragment-index="8">Concave up on <span class="cu">$(2,\infty)$</span></div><div class="fragment" data-fragment-index="9">Concave down on <span class="cd">$(-\infty,2)$</span></div></div><div class="fragment" data-fragment-index="10"><div class="ipbox">$f(2)=32 \;\Rightarrow\; (2,\,32)$ is an inflection point</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">الخطوات الجبرية حتى x = 2، ثم خط f″: النقطة 2، الإشارة − ثم +، ثم خط f: قوس لأسفل ثم لأعلى، ثم الفترات، ثم نقطة الانقلاب (2, 32). <br>عدد الضغطات في الشريحة: 10.</div></aside>
+</section>
+<section data-zmax="1.0" data-valign="center" data-item="Example 3 · graph">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 3 · graph</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass figcard center" style="width:1150px"><div class="plot-host" data-fig="ex3g"></div><div class="caption">$f(x)=x^3-6x^2+9x+30$</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">نفس النتيجة على الرسم: ذهبي = تقعر لأسفل، تركوازي = تقعر لأعلى.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Example 6">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 6</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-ex">Example 6</span><div class="prob-q"><span class="qb">For $f(x) = \dfrac{x+3}{x-5}$, find the intervals on which $f$ is concave up or down, and find all inflection points (if any).</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sx">$f$ is rational, twice differentiable at any $x\ne5$:</span><span class="sm">$D_f=(-\infty,5)\cup(5,\infty)$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$f'(x) = \dfrac{-8}{(x-5)^2}$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$f''(x) = \dfrac{16}{(x-5)^3}$</span></li><li class="fragment" data-fragment-index="4"><span class="sm">$f''(x)\ne 0$</span><span class="sm">$(x-5)^3=0 \Rightarrow x=5$:</span><span class="sx">$f''$ does not exist at $x=5$, but $5\notin D_f$</span></li></ol></div><div><div class="glass nl"><div class="nl-head">Sign of $f''$ &nbsp;⟹&nbsp; concavity of $f$</div><div class="nl-body"><div class="nl-row one"><div class="nl-lab"><span class="lf">$f(x)$</span><span class="lf2">$f''(x)$</span></div><div class="nl-track"><span class="fragment" data-fragment-index="5"><div class="nl-axis"></div><span class="nl-pt out" style="left:50%"></span><span class="nl-pl" style="left:50%">$5$<small class="out">$\notin D_f$</small></span></span><span class="fragment nlsigns" data-fragment-index="6"><span class="nl-sg neg" style="left:25.0%">−</span><span class="nl-sg pos" style="left:75.0%">+</span></span><span class="fragment" data-fragment-index="7"><span class="nl-arc dn" style="left:25.0%"><svg viewBox="0 0 132 56"><path d="M8 52 Q66 -18 124 52"/></svg><span>c.D</span></span><span class="nl-arc up" style="left:75.0%"><svg viewBox="0 0 132 56"><path d="M8 8 Q66 78 124 8"/></svg><span>c.u</span></span></span></div></div></div><div class="nl-res"><div class="fragment" data-fragment-index="8">Concave up on <span class="cu">$(5,\infty)$</span></div><div class="fragment" data-fragment-index="9">Concave down on <span class="cd">$(-\infty,5)$</span></div></div><div class="fragment" data-fragment-index="10"><div class="ipbox none">No inflection points, although the concavity changes around $x=5$, because $5\notin D_f$</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">f″ لا تساوي صفراً أبداً، وغير موجودة عند 5 لكن 5 ليست في المجال (دائرة حمراء). التقعر يتغير حول 5 ومع ذلك لا توجد نقطة انقلاب. <br>عدد الضغطات في الشريحة: 10.</div></aside>
+</section>
+<section data-zmax="1.0" data-valign="center" data-item="Example 6 · graph">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 6 · graph</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass figcard center" style="width:1150px"><div class="plot-host" data-fig="ex6g"></div><div class="caption">$f(x)=\dfrac{x+3}{x-5}$</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">خط التقارب الرأسي x = 5 يفصل الجزأين، والأفقي y = 1.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Example 8">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 8</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-ex">Example 8</span><div class="prob-q"><span class="qb">For $f(x) = x^{2/3}(1-x)$, find the intervals on which $f$ is concave up or down, and find all inflection points (if any).</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sx">$f$ is a radical function, twice differentiable at $x\ne0$:</span><span class="sm">$D_f=(-\infty,\infty)$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$f'(x) = \dfrac{2-5x}{3x^{1/3}}$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$f''(x) = \dfrac{-2(5x+1)}{9x^{4/3}}$</span></li><li class="fragment" data-fragment-index="4"><span class="sm">$-2(5x+1)=0 \Rightarrow x=-\tfrac15$</span><span class="sx">$f''(x)$ does not exist at $x=0$, and $0\in D_f$</span></li></ol></div><div><div class="glass nl"><div class="nl-head">Sign of $f''$ &nbsp;⟹&nbsp; concavity of $f$</div><div class="nl-body"><div class="nl-row one"><div class="nl-lab"><span class="lf">$f(x)$</span><span class="lf2">$f''(x)$</span></div><div class="nl-track"><span class="fragment" data-fragment-index="5"><div class="nl-axis"></div><span class="nl-pt " style="left:36%"></span><span class="nl-pl" style="left:36%">$-\tfrac15$</span><span class="nl-pt dne" style="left:68%"></span><span class="nl-pl" style="left:68%">$0$<small class="dne">$f''$ DNE</small></span></span><span class="fragment nlsigns" data-fragment-index="6"><span class="nl-sg pos" style="left:18.0%">+</span><span class="nl-sg neg" style="left:52.0%">−</span><span class="nl-sg neg" style="left:84.0%">−</span></span><span class="fragment" data-fragment-index="7"><span class="nl-arc up" style="left:18.0%"><svg viewBox="0 0 132 56"><path d="M8 8 Q66 78 124 8"/></svg><span>c.u</span></span><span class="nl-arc dn" style="left:52.0%"><svg viewBox="0 0 132 56"><path d="M8 52 Q66 -18 124 52"/></svg><span>c.D</span></span><span class="nl-arc dn" style="left:84.0%"><svg viewBox="0 0 132 56"><path d="M8 52 Q66 -18 124 52"/></svg><span>c.D</span></span></span></div></div></div><div class="nl-res"><div class="fragment" data-fragment-index="8">Concave up on <span class="cu">$\left(-\infty,-\tfrac15\right)$</span></div><div class="fragment" data-fragment-index="9">Concave down on <span class="cd">$\left(-\tfrac15,0\right),\ (0,\infty)$</span></div></div><div class="ipnote fragment"  data-fragment-index="10">At $x=0$: $f''$ does not change sign $\Rightarrow$ no inflection at $x=0$. Around $x=-\tfrac15$ the sign changes ($+$ to $-$).</div><div class="fragment" data-fragment-index="11"><div class="ipbox">only inflection point: $\left(-\tfrac15,\ \tfrac65\sqrt[3]{\tfrac1{25}}\right)$</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">نقطتان على خط f″: −1/5 حيث f″ = 0، و 0 حيث f″ غير موجودة لكنها في المجال. الإشارة + ثم − ثم −، فلا انقلاب عند 0 والانقلاب الوحيد عند −1/5. <br>عدد الضغطات في الشريحة: 11.</div></aside>
+</section>
+<section data-zmax="1.0" data-valign="center" data-item="Example 8 · graph">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 8 · graph</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass figcard center" style="width:1150px"><div class="plot-host" data-fig="ex8g"></div><div class="caption">$f(x)=x^{2/3}(1-x)$</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">عند 0 نقطة حادة (cusp): f″ غير موجودة لكن الإشارة لا تتغير، والمنحنى مقعر لأسفل على الجانبين.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Example 9">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 9</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-ex">Example 9</span><div class="prob-q"><span class="qb">For $f(x) = x + \sin x,\ x\in[0,2\pi]$, find the intervals on which $f$ is concave up or down, and find all inflection points (if any).</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sx">$f$ is continuous and twice differentiable on</span><span class="sm">$[0,2\pi]$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$f'(x) = 1+\cos x$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$f''(x) = -\sin x$</span></li><li class="fragment" data-fragment-index="4"><span class="sm">$f''(x) = 0 \;\Rightarrow\; x=\pi$</span><span class="sx">(the only zero inside $(0,2\pi)$)</span></li></ol></div><div><div class="glass nl"><div class="nl-head">Sign of $f''$ &nbsp;⟹&nbsp; concavity of $f$</div><div class="nl-body"><div class="nl-row one"><div class="nl-lab"><span class="lf">$f(x)$</span><span class="lf2">$f''(x)$</span></div><div class="nl-track"><span class="fragment" data-fragment-index="5"><div class="nl-axis closed"></div><span class="nl-pt end" style="left:4%"></span><span class="nl-pl" style="left:4%">$0$</span><span class="nl-pt end" style="left:96%"></span><span class="nl-pl" style="left:96%">$2\pi$</span><span class="nl-pt " style="left:50%"></span><span class="nl-pl" style="left:50%">$\pi$</span></span><span class="fragment nlsigns" data-fragment-index="6"><span class="nl-sg neg" style="left:27.0%">−</span><span class="nl-sg pos" style="left:73.0%">+</span></span><span class="fragment" data-fragment-index="7"><span class="nl-arc dn" style="left:27.0%"><svg viewBox="0 0 132 56"><path d="M8 52 Q66 -18 124 52"/></svg><span>c.D</span></span><span class="nl-arc up" style="left:73.0%"><svg viewBox="0 0 132 56"><path d="M8 8 Q66 78 124 8"/></svg><span>c.u</span></span></span></div></div></div><div class="nl-res"><div class="fragment" data-fragment-index="8">Concave up on <span class="cu">$(\pi,2\pi)$</span></div><div class="fragment" data-fragment-index="9">Concave down on <span class="cd">$(0,\pi)$</span></div></div><div class="fragment" data-fragment-index="10"><div class="ipbox">$(\pi, f(\pi)) = (\pi,\pi)$ is the only inflection point</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">الخط مقفول على [0, 2π]. النقطة π، الإشارة − ثم +. نقطة الانقلاب الوحيدة (π, π). <br>عدد الضغطات في الشريحة: 10.</div></aside>
+</section>
+<section data-zmax="1.0" data-valign="center" data-item="Example 9 · graph">
+<div class="sl"><div class="sl-top"><span class="num">3</span><span class="bt">Intervals of concavity</span><span class="line"></span><span class="it">Example 9 · graph</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass figcard center" style="width:1150px"><div class="plot-host" data-fig="ex9g"></div><div class="caption">$f(x)=x+\sin x,\ \ 0\le x\le 2\pi$</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">الرسم على [0, 2π]: مقعر لأسفل ثم لأعلى، والانقلاب عند (π, π).</div></aside>
+</section>
+</section>
+<section>
+<section data-zmax="1.35" data-valign="center" data-item="Theorem 4.2.3">
+<div class="sl"><div class="sl-top"><span class="num">4</span><span class="bt">The second derivative test</span><span class="line"></span><span class="it">Theorem 4.2.3</span></div><div class="sl-main"><div class="sl-fit">
+<div class="box thm" ><div class="box-head"><span class="box-kind">Theorem 4.2.3</span><span class="box-name">The Second Derivative Test</span></div><div class="box-body">Suppose $f''$ is continuous on an open interval containing $c$ with $f'(c) = 0$.<ul><li>If $f''(c) &gt; 0$, then $f$ has a relative minimum at $c$.</li><li>If $f''(c) &lt; 0$, then $f$ has a relative maximum at $c$.</li><li>If $f''(c) = 0$, then the test is inconclusive; $f$ may have a relative maximum, relative minimum, or neither at $c$.</li></ul></div></div><div class="box rem" ><div class="box-head"><span class="box-kind">Remark</span><span class="box-name"></span></div><div class="box-body">In such cases ($f''(c) = 0$), we may use the first derivative test.</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">اختبار المشتقة الثانية عند النقاط الحرجة f′(c) = 0، وإذا f″(c) = 0 نرجع لاختبار المشتقة الأولى.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Example 10 (1) · relative extrema">
+<div class="sl"><div class="sl-top"><span class="num">4</span><span class="bt">The second derivative test</span><span class="line"></span><span class="it">Example 10 (1) · relative extrema</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-ex">Example 10 (1)</span><div class="prob-q"><span class="qb">Find the relative extrema of $f$ using the second derivative test if applicable. Discuss the concavity of $f$ and find the point(s) of inflection: $f(x) = 3x^4 - 4x^3 - 6x^2 + 12x + 1,\ [-2, 2]$.</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sm">$f'(x) = 12x^3 - 12x^2 - 12x + 12$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$f''(x) = 36x^2 - 24x - 12$</span><span class="sm">$\Rightarrow f''(x) = 12(3x^2-2x-1)$</span></li><li class="fragment" data-fragment-index="3"><span class="sx">$f'(x)=0$:</span><span class="sm">$12(x^3-x^2-x+1) = 0$</span><span class="sm">$12\left[x^2(x-1)-(x-1)\right]=0$</span><span class="sm">$12(x-1)(x^2-1)=0$</span><span class="sm">$12(x+1)(x-1)^2=0$</span><span class="sm">$\Rightarrow\ x=-1,\ x=1$</span></li></ol></div><div><ol class="steps" style="counter-reset:st 3"><li class="fragment" data-fragment-index="4"><span class="sm">$f''(-1) = 48 &gt; 0,\qquad f''(1) = 0$</span></li></ol><div class="answer fragment"  data-fragment-index="5"><span class="k">x = −1</span>By the Second Derivative Test: <b>relative minimum</b> at $x=-1$</div><div class="answer gold fragment"  data-fragment-index="6"><span class="k">x = 1</span>Test inconclusive; $f'$ does not change sign at $x=1$:<br>$f'(0.5) = 4.5 &gt; 0,\quad f'(1.5) = \tfrac{15}{2} &gt; 0$<br>$\Rightarrow$ no relative maximum or minimum at $x=1$</div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">النقاط الحرجة −1 و 1. عند −1: f″ = 48 موجبة فنهاية صغرى محلية. عند 1: f″ = 0 فالاختبار لا يحسم، و f′ لا تغيّر إشارتها فلا قيمة قصوى. <br>عدد الضغطات في الشريحة: 6.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Example 10 (1) · concavity">
+<div class="sl"><div class="sl-top"><span class="num">4</span><span class="bt">The second derivative test</span><span class="line"></span><span class="it">Example 10 (1) · concavity</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q compact"><span class="prob-badge b-ex">Example 10 (1)</span><div class="prob-q"><span class="qb">$f(x) = 3x^4 - 4x^3 - 6x^2 + 12x + 1,\ [-2, 2]$, &nbsp; $f''(x) = 12(3x^2 - 2x - 1)$.</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sm">$f''(x) = 0$ if $3x^2-2x-1=0$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$(3x+1)(x-1)=0$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$\Rightarrow\ x=-\tfrac13$ or $x=1$</span></li></ol></div><div><div class="glass nl"><div class="nl-head">Sign of $f''$ &nbsp;⟹&nbsp; concavity of $f$</div><div class="nl-body"><div class="nl-row one"><div class="nl-lab"><span class="lf">$f(x)$</span><span class="lf2">$f''(x)$</span></div><div class="nl-track"><span class="fragment" data-fragment-index="4"><div class="nl-axis closed"></div><span class="nl-pt end" style="left:4%"></span><span class="nl-pl" style="left:4%">$-2$</span><span class="nl-pt end" style="left:96%"></span><span class="nl-pl" style="left:96%">$2$</span><span class="nl-pt " style="left:42.3%"></span><span class="nl-pl" style="left:42.3%">$-\tfrac13$</span><span class="nl-pt " style="left:73%"></span><span class="nl-pl" style="left:73%">$1$</span></span><span class="fragment nlsigns" data-fragment-index="5"><span class="nl-sg pos" style="left:23.15%">+</span><span class="nl-sg neg" style="left:57.65%">−</span><span class="nl-sg pos" style="left:84.5%">+</span></span><span class="fragment" data-fragment-index="6"><span class="nl-arc up" style="left:23.15%"><svg viewBox="0 0 132 56"><path d="M8 8 Q66 78 124 8"/></svg><span>c.u</span></span><span class="nl-arc dn" style="left:57.65%"><svg viewBox="0 0 132 56"><path d="M8 52 Q66 -18 124 52"/></svg><span>c.D</span></span><span class="nl-arc up" style="left:84.5%"><svg viewBox="0 0 132 56"><path d="M8 8 Q66 78 124 8"/></svg><span>c.u</span></span></span></div></div></div><div class="nl-res"><div class="fragment" data-fragment-index="7">Concave up on <span class="cu">$\left(-2,-\tfrac13\right),\ (1,2)$</span></div><div class="fragment" data-fragment-index="8">Concave down on <span class="cd">$\left(-\tfrac13,\,1\right)$</span></div></div><div class="fragment" data-fragment-index="9"><div class="ipbox">Concavity changes at $x=-\tfrac13$ and $x=1$: inflection points $\left(-\tfrac13,-\tfrac{94}{27}\right),\ (1,6)$</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">الخط مقفول على [−2, 2]. النقطتان −1/3 و 1، والإشارات + ثم − ثم +. نقطتا انقلاب (−1/3, −94/27) و (1, 6). لاحظ أن (1, 6) نقطة انقلاب مع أن f′(1) = 0. <br>عدد الضغطات في الشريحة: 9.</div></aside>
+</section>
+<section data-zmax="1.0" data-valign="center" data-item="Example 10 (1) · graph">
+<div class="sl"><div class="sl-top"><span class="num">4</span><span class="bt">The second derivative test</span><span class="line"></span><span class="it">Example 10 (1) · graph</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass figcard center" style="width:1150px"><div class="plot-host" data-fig="ex10g"></div><div class="caption">$f(x)=3x^4-4x^3-6x^2+12x+1,\ \ [-2,2]$</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">النهاية الصغرى (−1, −10)، ونقطتا الانقلاب. عند (1, 6) المماس أفقي ومع ذلك ليست قيمة قصوى.</div></aside>
+</section>
+</section>
+<section>
+<section data-zmax="1.2" data-valign="top" data-item="Challenging Problems 5">
+<div class="sl"><div class="sl-top"><span class="num">5</span><span class="bt">Challenging & Communicate</span><span class="line"></span><span class="it">Challenging Problems 5</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-ch">Challenging 5</span><div class="prob-q"><span class="qb">Suppose $f$ and $g$ are both concave up on $(-\infty,\infty)$. Under what condition on $f$ will the composite function $h(x) = f(g(x))$ be concave up?</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sx">(Assume $f, g$ twice differentiable.)</span><span class="sm">$h'(x) = f'(g(x))\, g'(x)$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$h''(x) = f''(g(x))\,[g'(x)]^2$</span><span class="sm">$\qquad\quad +\, f'(g(x))\, g''(x)$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$f'' &gt; 0,\ [g']^2 \ge 0$</span><span class="sm">$\Rightarrow$ first term $\ge 0$</span><span class="sm">$g'' &gt; 0$</span><span class="sm">$\Rightarrow h''(x) &gt; 0$</span><span class="sx">whenever $f'(g(x)) &gt; 0$</span></li></ol></div><div><div class="answer fragment"  data-fragment-index="4"><span class="k">Sufficient condition</span>$f$ increasing ($f' &gt; 0$) $\Rightarrow h = f\circ g$ is concave up</div><p class="ipnote fragment"  data-fragment-index="5">The condition is <b>sufficient</b>. The next two slides show that without it concavity may fail, and that it is <b>not necessary</b>.</p></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">نشتق مرتين بقاعدة السلسلة. الحد الأول غير سالب دائماً، والثاني موجب إذا كانت f تزايدية: شرط كافٍ. الشريحتان التاليتان: قد يفشل بدونه، وليس ضرورياً. <br>عدد الضغطات في الشريحة: 5.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Challenging 5 · without it, it may fail">
+<div class="sl"><div class="sl-top"><span class="num">5</span><span class="bt">Challenging & Communicate</span><span class="line"></span><span class="it">Challenging 5 · without it, it may fail</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q compact"><span class="prob-badge b-ch">Challenging 5</span><div class="prob-q"><span class="qb">Suppose $f$ and $g$ are both concave up on $(-\infty,\infty)$. Under what condition on $f$ will the composite function $h(x) = f(g(x))$ be concave up?</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sx">Take $f$ concave up but <b>decreasing</b>:</span><span class="sm">$f(u)=e^{-u},\quad g(x)=x^2$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$h(x)=f(g(x))=e^{-x^2}$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$h''(x)=(4x^2-2)\,e^{-x^2}$</span></li><li class="fragment" data-fragment-index="4"><span class="sm">$h''(0)=-2&lt;0$</span></li></ol><div class="answer rose fragment"  data-fragment-index="5"><span class="k">So</span>$h$ is concave <b>down</b> on $\left(-\tfrac{1}{\sqrt2},\tfrac{1}{\sqrt2}\right)$: without the condition, concavity may fail</div></div><div><div class="fragment" data-fragment-index="6"><div class="glass figcard "><div class="plot-host" data-fig="ch5a"></div><div class="caption">$h(x)=e^{-x^2}$ — teal: concave up, gold: concave down</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">f متناقصة: e^(−u)، و g = x². الناتج منحنى الجرس، مقعر لأسفل حول الصفر. الرسم يظهر بعد الحساب. <br>عدد الضغطات في الشريحة: 6.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="top" data-item="Challenging 5 · the condition is not necessary">
+<div class="sl"><div class="sl-top"><span class="num">5</span><span class="bt">Challenging & Communicate</span><span class="line"></span><span class="it">Challenging 5 · the condition is not necessary</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q compact"><span class="prob-badge b-ch">Challenging 5</span><div class="prob-q"><span class="qb">Suppose $f$ and $g$ are both concave up on $(-\infty,\infty)$. Under what condition on $f$ will the composite function $h(x) = f(g(x))$ be concave up?</span></div></div><div class="work two split"><div><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sx">Again $f$ concave up and <b>decreasing</b>:</span><span class="sm">$f(u)=e^{-u}$</span></li><li class="fragment" data-fragment-index="2"><span class="sx">but now</span><span class="sm">$g(x)=e^{x}+x,\quad g''(x)=e^{x}&gt;0$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$h(x)=e^{-(e^{x}+x)}$</span></li><li class="fragment" data-fragment-index="4"><span class="sm">$h''(x)=e^{-g}\left[(g')^2-g''\right]$</span><span class="sm">$\phantom{h''(x)}=e^{-g}\left(e^{2x}+e^{x}+1\right)&gt;0$</span></li></ol><div class="answer fragment"  data-fragment-index="5"><span class="k">So</span>$h$ is concave up on $\mathbb{R}$ although $f'&lt;0$: the condition is <b>not necessary</b></div><div class="answer gold fragment"  data-fragment-index="6"><span class="k">Exact requirement</span>$f''(g)\,(g')^2+f'(g)\,g''&gt;0$ — it depends on $g$ too</div></div><div><div class="fragment" data-fragment-index="7"><div class="glass figcard "><div class="plot-host" data-fig="ch5b"></div><div class="caption">$h(x)=e^{-(e^x+x)}$ — concave up everywhere</div></div></div></div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">نفس f المتناقصة لكن g مختلفة: الحد الأول يغلب الثاني فتبقى h مقعرة لأعلى. إذن الشرط كافٍ وليس ضرورياً، والشرط الدقيق يعتمد على g أيضاً. <br>عدد الضغطات في الشريحة: 7.</div></aside>
+</section>
+<section data-zmax="1.3" data-valign="top" data-item="Communicate with Mathematics 2">
+<div class="sl"><div class="sl-top"><span class="num">5</span><span class="bt">Challenging & Communicate</span><span class="line"></span><span class="it">Communicate with Mathematics 2</span></div><div class="sl-main"><div class="sl-fit">
+<div class="glass q"><span class="prob-badge b-com">Communicate 2</span><div class="prob-q"><span class="qb">Prove that a quadratic function $f(x) = ax^2 + bx + c$ has no inflection points.</span></div></div><div class="work"><ol class="steps"><li class="fragment" data-fragment-index="1"><span class="sm">$f$ is quadratic $\Rightarrow a\ne0$</span></li><li class="fragment" data-fragment-index="2"><span class="sm">$f'(x) = 2ax + b$</span></li><li class="fragment" data-fragment-index="3"><span class="sm">$f''(x) = 2a \ne 0$ for all $x$</span></li><li class="fragment" data-fragment-index="4"><span class="sx">$f''$ exists everywhere and is never $0$: by Theorem 4.2.2 there is no candidate $c$ with $f''(c) = 0$ or $f''(c)$ undefined</span><span class="sx">($a&gt;0$: concave up on $\mathbb{R}$; $a&lt;0$: concave down on $\mathbb{R}$)</span></li></ol><div class="answer fragment"  data-fragment-index="5"><span class="k">Conclusion</span>$\Rightarrow f$ has no inflection points &nbsp;■</div></div>
+</div></div></div>
+<aside class="notes"><div dir="rtl">f″ = 2a ثابتة لا تساوي صفراً، فلا يوجد مرشح لنقطة انقلاب حسب النظرية 4.2.2. <br>عدد الضغطات في الشريحة: 5.</div></aside>
+</section>
+<section data-zmax="1.2" data-valign="center" data-item="Thank you">
+<div class="sl"><div class="sl-main"><div class="sl-fit"><div class="thanks">
+<h1><em>Thank you</em></h1><p>Questions &amp; discussion</p>
+<p style="margin-top:1.4rem;font-size:0.9rem">Dr. Wessam Gouda · Section 4.2 — Concavity and Inflection Points</p>
+</div></div></div></div>
+<aside class="notes"><div dir="rtl">نهاية العرض.</div></aside>
+</section>
+</section>
+</div>
+</div>
+
+<div id="bar">
+  <button class="ub sq" id="bPrev" title="Previous step (Shift + Space)" aria-label="Previous step"><svg viewBox="0 0 24 24"><polyline points="15 5 8 12 15 19"/></svg></button>
+  <button class="ub sq" id="bNext" title="Next step (Space)" aria-label="Next step"><svg viewBox="0 0 24 24"><polyline points="9 5 16 12 9 19"/></svg></button>
+  <span id="bPos"><b>Title</b></span>
+  <button class="ub" id="bBoard" title="Whiteboard (W)"><svg viewBox="0 0 24 24"><path d="M4 20l1.2-4.4L16.5 4.3a1.8 1.8 0 012.6 0l.6.6a1.8 1.8 0 010 2.6L8.4 18.8z"/><path d="M14.5 6.3l3.2 3.2"/></svg><span>Board</span></button>
+  <button class="ub sq" id="bOver" title="Overview of all slides (Esc)" aria-label="Overview"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"/></svg></button>
+  <button class="ub sq" id="bFull" title="Full screen (F)" aria-label="Full screen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button class="ub" id="themeBtn" title="Light / dark (T)" aria-label="Toggle theme"><svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24"><path d="M21 13.2A9 9 0 1 1 10.8 3a7 7 0 0 0 10.2 10.2z"/></svg><span class="t-light">Light</span><span class="t-dark">Dark</span></button>
+</div>
+
+<div id="board" class="over">
+  <canvas></canvas>
+  <div id="boardbar">
+    <div class="grp"><span class="sw on" data-tok="teal"></span><span class="sw" data-tok="gold"></span><span class="sw" data-tok="ink"></span><span class="sw" data-tok="rose"></span><span class="sw" data-tok="blue"></span></div>
+    <span class="sep"></span>
+    <div class="grp"><button class="ub sq szbtn on" data-w="2.5" aria-label="Pen size 1"><i style="width:0.3em;height:0.3em"></i></button><button class="ub sq szbtn" data-w="5" aria-label="Pen size 2"><i style="width:0.55em;height:0.55em"></i></button><button class="ub sq szbtn" data-w="10" aria-label="Pen size 3"><i style="width:0.9em;height:0.9em"></i></button></div>
+    <span class="sep"></span>
+    <div class="grp">
+      <button class="ub js-eraser">Eraser</button>
+      <button class="ub js-undo">Undo</button>
+      <button class="ub js-clear">Clear</button>
+    </div>
+    <span class="sep"></span>
+    <div class="seg">
+      <button class="ub js-over on" title="Write on top of the slide">Over slide</button>
+      <button class="ub js-page" title="A clean ruled page">Blank page</button>
+    </div>
+    <span class="sep"></span>
+    <div class="grp">
+      <button class="ub sq js-prev" title="Previous step" aria-label="Previous step"><svg viewBox="0 0 24 24"><polyline points="15 5 8 12 15 19"/></svg></button>
+      <button class="ub sq js-next" title="Next step" aria-label="Next step"><svg viewBox="0 0 24 24"><polyline points="9 5 16 12 9 19"/></svg></button>
+      <button class="ub js-close" title="Close the board (Esc)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Close</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ========================================================================
+   0 · THEME
+   ======================================================================== */
+const ROOT=document.documentElement;
+const THEME_KEY='sem42-theme';
+let theme='dark';
+try{ theme=localStorage.getItem(THEME_KEY)||'dark'; }catch(e){}
+ROOT.setAttribute('data-theme',theme);
+function P(){
+  const c=getComputedStyle(ROOT), g=v=>c.getPropertyValue(v).trim();
+  return {teal:g('--teal'),gold:g('--gold'),rose:g('--rose'),blue:g('--blue'),green:g('--green'),
+          ink:g('--text-hi'),mute:g('--text-lo'),rule:g('--rule'),bg:g('--bg-0')};
+}
+
+/* ========================================================================
+   1 · plot() — small SVG plotter used by every static figure
+   ======================================================================== */
+function plot(host,cfg){
+  const C=P(), col=t=>C[t]||t, FS=cfg.fs||1.3;   // lettering enlarged for the lecture hall
+  const w=cfg.w||900, h=cfg.h||520, pad=Object.assign({l:64,r:24,t:22,b:48},cfg.pad||{});
+  const [x0,x1]=cfg.xr, [y0,y1]=cfg.yr;
+  const X=x=>pad.l+(x-x0)/(x1-x0)*(w-pad.l-pad.r);
+  const Y=y=>h-pad.b-(y-y0)/(y1-y0)*(h-pad.t-pad.b);
+  const id='c'+Math.random().toString(36).slice(2,8);
+  const o=[];
+  o.push(`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">`);
+  o.push(`<defs><clipPath id="${id}"><rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}"/></clipPath></defs>`);
+  // grid
+  if(cfg.gx){ for(let x=Math.ceil(x0/cfg.gx)*cfg.gx;x<=x1+1e-9;x+=cfg.gx)
+      o.push(`<line x1="${X(x)}" y1="${pad.t}" x2="${X(x)}" y2="${h-pad.b}" stroke="${C.rule}" stroke-width="1"/>`); }
+  if(cfg.gy){ for(let y=Math.ceil(y0/cfg.gy)*cfg.gy;y<=y1+1e-9;y+=cfg.gy)
+      o.push(`<line x1="${pad.l}" y1="${Y(y)}" x2="${w-pad.r}" y2="${Y(y)}" stroke="${C.rule}" stroke-width="1"/>`); }
+  (cfg.bands||[]).forEach(b=>o.push(`<rect x="${X(b.x0)}" y="${pad.t}" width="${X(b.x1)-X(b.x0)}" height="${h-pad.t-pad.b}" fill="${col(b.color)}" opacity="${b.a||0.10}"/>`));
+  // axes
+  const ay=(y0<=0&&y1>=0)?Y(0):h-pad.b, ax=(x0<=0&&x1>=0)?X(0):pad.l;
+  o.push(`<g stroke="${C.mute}" stroke-width="1.6" fill="${C.mute}">`
+    +`<line x1="${pad.l}" y1="${ay}" x2="${w-pad.r+6}" y2="${ay}"/><path d="M${w-pad.r+12} ${ay} l-11 -5 v10z" stroke="none"/>`
+    +`<line x1="${ax}" y1="${h-pad.b}" x2="${ax}" y2="${pad.t-6}"/><path d="M${ax} ${pad.t-12} l-5 11 h10z" stroke="none"/></g>`);
+  o.push(`<text x="${w-pad.r+4}" y="${ay-12}" font-size="${Math.round(22*FS)}" font-style="italic" fill="${C.mute}" text-anchor="end">x</text>`);
+  o.push(`<text x="${ax+12}" y="${pad.t+8}" font-size="${Math.round(22*FS)}" font-style="italic" fill="${C.mute}">y</text>`);
+  const ts=Math.round((cfg.tickSize||18)*FS);
+  (cfg.xTicks||[]).forEach(t=>{ const tx=typeof t==='number'?{x:t,text:String(t).replace('-','−')}:t;
+    o.push(`<line x1="${X(tx.x)}" y1="${ay-5}" x2="${X(tx.x)}" y2="${ay+5}" stroke="${C.mute}" stroke-width="1.6"/>`);
+    o.push(`<text x="${X(tx.x)}" y="${ay+ts+8}" font-size="${ts}" fill="${C.mute}" text-anchor="middle">${tx.text}</text>`); });
+  (cfg.yTicks||[]).forEach(t=>{ const ty=typeof t==='number'?{y:t,text:String(t).replace('-','−')}:t;
+    o.push(`<line x1="${ax-5}" y1="${Y(ty.y)}" x2="${ax+5}" y2="${Y(ty.y)}" stroke="${C.mute}" stroke-width="1.6"/>`);
+    o.push(`<text x="${ax-10}" y="${Y(ty.y)+6}" font-size="${ts}" fill="${C.mute}" text-anchor="end">${ty.text}</text>`); });
+  o.push(`<g clip-path="url(#${id})">`);
+  (cfg.guides||[]).forEach(g=>o.push(`<line x1="${X(g.x)}" y1="${pad.t}" x2="${X(g.x)}" y2="${h-pad.b}" stroke="${col(g.color||'mute')}" stroke-width="1.8" stroke-dasharray="7 6"/>`));
+  (cfg.hguides||[]).forEach(g=>o.push(`<line x1="${pad.l}" y1="${Y(g.y)}" x2="${w-pad.r}" y2="${Y(g.y)}" stroke="${col(g.color||'mute')}" stroke-width="1.8" stroke-dasharray="7 6"/>`));
+  (cfg.curves||[]).forEach(c=>{
+    const n=c.n||800, lim=3*(y1-y0); let seg=[], segCol=null;
+    const flush=()=>{ if(seg.length>1) o.push(`<polyline points="${seg.join(' ')}" fill="none" stroke="${col(segCol)}" stroke-width="${c.w||4}" stroke-linecap="round" stroke-linejoin="round"${c.dash?` stroke-dasharray="${c.dash}"`:''}/>`); seg=[]; };
+    let prev=null;
+    for(let i=0;i<=n;i++){
+      const x=c.from+(c.to-c.from)*i/n, y=c.f(x);
+      if(!isFinite(y)||y<y0-lim||y>y1+lim||(c.gap!==undefined&&Math.abs(x-c.gap)<(c.to-c.from)/n*1.5)){ flush(); prev=null; continue; }
+      const k=c.colorBy?c.colorBy(prev?(x+prev)/2:x):(c.color||'blue');
+      if(k!==segCol && seg.length){ const last=seg[seg.length-1]; flush(); seg=[last]; }
+      segCol=k; seg.push(X(x).toFixed(1)+','+Y(y).toFixed(1)); prev=x;
+    }
+    flush();
+  });
+  (cfg.polys||[]).forEach(p=>o.push(`<polyline points="${p.pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${col(p.color||'ink')}" stroke-width="${p.w||2.4}" stroke-linecap="round"${p.dash?` stroke-dasharray="${p.dash}"`:''}/>`));
+  o.push(`</g>`);
+  (cfg.dots||[]).forEach(d=>o.push(`<circle cx="${X(d.x)}" cy="${Y(d.y)}" r="${d.r||7}" fill="${d.open?C.bg:col(d.color||'ink')}" stroke="${col(d.color||'ink')}" stroke-width="3"/>`));
+  (cfg.labels||[]).forEach(l=>o.push(`<text x="${X(l.x)+(l.dx||0)}" y="${Y(l.y)+(l.dy||0)}" font-size="${Math.round((l.size||21)*FS)}" fill="${col(l.color||'ink')}" text-anchor="${l.anchor||'start'}"${l.italic?' font-style="italic"':''}${l.bold?' font-weight="600"':''}>${l.text}</text>`));
+  o.push('</svg>');
+  host.innerHTML=o.join('');
+}
+
+/* ========================================================================
+   2 · STATIC FIGURES — every curve is coloured by the sign of f″
+   (teal: concave up, gold: concave down), the same code as the Explorer.
+   ======================================================================== */
+const PI=Math.PI, cbrt=Math.cbrt;
+const bySign=d2=>x=>{ const s=d2(x); return s>0?'teal':(s<0?'gold':'ink'); };
+const tan=(f,df,a,s)=>({pts:[[a-s,f(a)-df(a)*s],[a+s,f(a)+df(a)*s]],color:'mute',w:2.2,dash:'8 6'});
+const FIGS={
+  intro: host=>plot(host,{w:1000,h:430,xr:[-3.7,3.7],yr:[-1.75,1.75],
+    xTicks:[{x:-PI,text:'−π'},{x:-PI/2,text:'−π/2'},{x:PI/2,text:'π/2'},{x:PI,text:'π'}],yTicks:[-1,1],
+    curves:[{f:Math.sin,from:-PI,to:PI,colorBy:x=>x<0?'teal':'gold',w:5}],
+    polys:[tan(Math.sin,Math.cos,-2.4,0.6),tan(Math.sin,Math.cos,-PI/2,0.6),tan(Math.sin,Math.cos,-0.75,0.6),
+           tan(Math.sin,Math.cos,0.75,0.6),tan(Math.sin,Math.cos,PI/2,0.6),tan(Math.sin,Math.cos,2.4,0.6)],
+    labels:[{x:-PI/2,y:-1.52,text:'concave up — slopes increase',color:'teal',anchor:'middle',bold:true},
+            {x:PI/2,y:1.4,text:'concave down — slopes decrease',color:'gold',anchor:'middle',bold:true},
+            {x:-3.5,y:0.75,text:'y = sin x',italic:true,color:'ink'}]}),
+
+  cube: host=>plot(host,{w:620,h:420,xr:[-2,2],yr:[-6,6],xTicks:[-1,1],yTicks:[-4,4],
+    curves:[{f:x=>x**3,from:-1.85,to:1.85,colorBy:bySign(x=>6*x),w:5}],
+    dots:[{x:0,y:0,color:'ink',r:8}],
+    labels:[{x:0.15,y:-1.6,text:'inflection point',size:20},{x:0.95,y:4.6,text:'y = x³',italic:true},
+            {x:-1.85,y:2.2,text:'concave down',color:'gold',bold:true,size:19},{x:0.55,y:-4.6,text:'concave up',color:'teal',bold:true,size:19}]}),
+
+  rp1: host=>{ const d1=x=>0.5*(x**5/5+x**4/4-7*x**3/3-x*x/2+6*x)-1;
+    plot(host,{w:880,h:560,xr:[-5.4,5.4],yr:[-8.6,8.6],gx:1,gy:2,
+      xTicks:[-5,-4,-3,-2,-1,1,2,3,4,5],yTicks:[-8,-6,-4,-2,2,4,6,8],
+      curves:[{f:d1,from:-5.4,to:5.4,color:'blue',w:4.5}],
+      labels:[{x:-4.9,y:7,text:'y = f′(x)',italic:true,color:'blue',size:23}]}); },
+
+  ex2: host=>{ const d1=x=>5*x**3/3-1.5*x*x-2*x, d2=x=>5*x*x-3*x-2;
+    plot(host,{w:880,h:560,xr:[-2.2,2.4],yr:[-5,7],gx:0.5,gy:1,
+      xTicks:[-2,-1,1,2],yTicks:[-4,-2,2,4,6],
+      curves:[{f:d2,from:-2.2,to:2.4,color:'rose',w:4},{f:d1,from:-2.2,to:2.4,color:'blue',w:4}],
+      dots:[{x:-0.4,y:0,color:'rose',r:6},{x:1,y:0,color:'rose',r:6}],
+      labels:[{x:-1.95,y:5.9,text:'y = f″(x)',italic:true,color:'rose',size:23},
+              {x:-2.1,y:-3.6,text:'y = f′(x)',italic:true,color:'blue',size:23}]}); },
+
+  ex3g: host=>{ const f=x=>x**3-6*x*x+9*x+30;
+    plot(host,{w:1000,h:540,xr:[-1.4,5.4],yr:[-3,55],gx:1,gy:10,xTicks:[-1,1,2,3,4,5],yTicks:[20,40],
+      curves:[{f,from:-1.3,to:5.2,colorBy:bySign(x=>6*x-12),w:5}],
+      dots:[{x:2,y:32,r:8}],guides:[{x:2}],
+      labels:[{x:2.15,y:36,text:'(2, 32) inflection point',size:21},
+              {x:0.15,y:47,text:'concave down (−∞, 2)',color:'gold',bold:true},{x:3.2,y:22,text:'concave up (2, ∞)',color:'teal',bold:true}]}); },
+
+  ex6g: host=>{ const f=x=>(x+3)/(x-5);
+    plot(host,{w:1000,h:540,xr:[-15.5,20.5],yr:[-10.5,10.5],gx:5,gy:5,xTicks:[-15,-10,-5,5,10,15,20],yTicks:[-10,-5,5,10],
+      curves:[{f,from:-15.5,to:20.5,gap:5,colorBy:bySign(x=>16/(x-5)**3),w:5,n:2000}],
+      guides:[{x:5,color:'rose'}],hguides:[{y:1}],
+      labels:[{x:7,y:8,text:'concave up (5, ∞)',color:'teal',bold:true},{x:-14.5,y:-6,text:'concave down (−∞, 5)',color:'gold',bold:true},
+              {x:5.4,y:-9.6,text:'x = 5 ∉ D<tspan baseline-shift="sub" font-size="14">f</tspan>',color:'rose',size:19},{x:-14.8,y:2.3,text:'y = 1',color:'mute',size:19}]}); },
+
+  ex8g: host=>{ const f=x=>cbrt(x*x)*(1-x), yi=1.2*cbrt(1/25);
+    plot(host,{w:1000,h:540,xr:[-2.1,2.1],yr:[-2,5.2],gx:0.5,gy:1,
+      xTicks:[-2,-1.5,-1,-0.5,0.5,1,1.5,2].map(v=>({x:v,text:String(v).replace('-','−')})),yTicks:[-1,1,2,3,4],
+      curves:[{f,from:-2,to:2,colorBy:bySign(x=>-2*(5*x+1)/(9*cbrt(x)**4)),w:5,n:2000}],
+      dots:[{x:-0.2,y:yi,r:8}],
+      labels:[{x:-0.32,y:0.2,text:'inflection point (−0.2, 0.41)',anchor:'end',size:20},
+              {x:-1.95,y:1.25,text:'concave up',color:'teal',bold:true},{x:0.55,y:2.0,text:'concave down',color:'gold',bold:true},
+              {x:0.1,y:-1.5,text:'cusp at 0: f″ DNE, no sign change',color:'blue',size:18}]}); },
+
+  ex9g: host=>{ const f=x=>x+Math.sin(x);
+    plot(host,{w:1000,h:540,xr:[-0.4,6.9],yr:[-0.4,7.2],gy:1,
+      xTicks:[{x:PI/2,text:'π/2'},{x:PI,text:'π'},{x:3*PI/2,text:'3π/2'},{x:2*PI,text:'2π'}],yTicks:[2,4,6],
+      curves:[{f,from:0,to:2*PI,colorBy:bySign(x=>-Math.sin(x)),w:5}],
+      dots:[{x:PI,y:PI,r:8},{x:0,y:0,r:6},{x:2*PI,y:2*PI,r:6}],
+      labels:[{x:PI+0.15,y:PI-0.55,text:'(π, π)',size:21},
+              {x:0.25,y:4.6,text:'concave down (0, π)',color:'gold',bold:true},{x:3.9,y:2.6,text:'concave up (π, 2π)',color:'teal',bold:true}]}); },
+
+  ex10g: host=>{ const f=x=>3*x**4-4*x**3-6*x*x+12*x+1;
+    plot(host,{w:1000,h:560,xr:[-2.25,2.25],yr:[-16,40],gx:0.5,gy:10,
+      xTicks:[-2,-1.5,-1,-0.5,0.5,1,1.5,2].map(v=>({x:v,text:String(v).replace('-','−')})),yTicks:[-10,10,20,30],
+      curves:[{f,from:-2,to:2,colorBy:bySign(x=>36*x*x-24*x-12),w:5}],
+      dots:[{x:-2,y:33,r:6},{x:2,y:17,r:6},{x:-1,y:-10,color:'rose',r:7},{x:-1/3,y:-94/27,r:8},{x:1,y:6,r:8}],
+      labels:[{x:-1.95,y:33,text:'(−2, 33)',size:20,dx:12},{x:1.95,y:17,text:'(2, 17)',size:20,anchor:'end',dx:-12},
+              {x:1,y:6,text:'(1, 6)',size:20,dx:-14,dy:-16,anchor:'end'},{x:-1/3,y:-94/27,text:'(−1/3, −94/27)',size:20,dx:14,dy:30},
+              {x:-1,y:-10,text:'local min (−1, −10)',size:20,color:'rose',dy:34,anchor:'middle'}]}); }
+};
+
+Object.assign(FIGS,{
+  ch5a: host=>{ const h=x=>Math.exp(-x*x), r=1/Math.SQRT2;
+    plot(host,{w:900,h:520,xr:[-3,3],yr:[-0.15,1.25],xTicks:[-2,-1,1,2],yTicks:[0.5,1],
+      curves:[{f:h,from:-3,to:3,colorBy:bySign(x=>4*x*x-2),w:5}],
+      dots:[{x:-r,y:h(r),r:8},{x:r,y:h(r),r:8}],
+      labels:[{x:0.1,y:1.15,text:'concave down near 0',color:'gold',bold:true},
+              {x:-2.9,y:0.35,text:'concave up',color:'teal',bold:true},{x:2.9,y:0.35,text:'concave up',color:'teal',bold:true,anchor:'end'}]}); },
+  ch5b: host=>{ const h=x=>Math.exp(-(Math.exp(x)+x));
+    plot(host,{w:900,h:400,xr:[-2.2,1.8],yr:[-0.6,7.2],gy:1,xTicks:[-2,-1,1],yTicks:[2,4,6],
+      curves:[{f:h,from:-2.1,to:1.7,color:'teal',w:5}],
+      labels:[{x:0.12,y:4.6,text:'concave up on ℝ',color:'teal',bold:true}]}); }
+});
+function renderFigures(){
+  document.querySelectorAll('[data-fig]').forEach(h=>{ const f=FIGS[h.dataset.fig]; if(f) f(h); });
+  if(typeof renderWidgets==='function') renderWidgets();
+}
+
+/* ========================================================================
+   3 · FIT — scale each slide's content to the 1600 x 900 canvas
+   ======================================================================== */
+function fitSlide(sec){
+  const main=sec.querySelector('.sl-main'), fit=sec.querySelector('.sl-fit');
+  if(!main||!fit) return true;
+  const W=main.clientWidth, H=main.clientHeight;
+  if(!W||!H) return false;
+  const zmax=parseFloat(sec.dataset.zmax||'1'), zmin=0.55;
+  const tall=z=>{ fit.style.width=(W/z)+'px'; return fit.offsetHeight*z; };
+  const wide=()=>{ for(const e of fit.querySelectorAll('.katex-display')) if(e.scrollWidth>e.clientWidth+1) return true; return false; };
+  const fits=z=>tall(z)<=H && !wide();
+  let z=zmax;
+  if(!fits(z)){
+    let lo=zmin, hi=zmax;
+    for(let i=0;i<10;i++){ const m=(lo+hi)/2; if(fits(m)) lo=m; else hi=m; }
+    z=lo;
+  }
+  const used=tall(z);
+  const dy=(sec.dataset.valign==='center') ? Math.max(0,(H-used)/2) : 0;
+  fit.style.transform=`translate(0px,${dy.toFixed(1)}px) scale(${z.toFixed(4)})`;
+  sec.dataset.z=z.toFixed(3);
+  return true;
+}
+function fitAll(force){
+  document.querySelectorAll('.reveal .slides section').forEach(sec=>{
+    if(!sec.querySelector(':scope > .sl')) return;
+    if(force) delete sec.dataset.fitted;
+    if(!sec.dataset.fitted && fitSlide(sec)) sec.dataset.fitted='1';
+  });
+}
+
+/* ========================================================================
+   4 · FULL-SCREEN BOARD (same as the 2.4 deck)
+   ======================================================================== */
+const Board=(function(){
+  const el=document.getElementById('board'), cv=el.querySelector('canvas'), ctx=cv.getContext('2d');
+  const INK={};
+  let mode='over', tok='teal', width=2.5, erasing=false, cur=null, pid=null, open=false;
+  const key=()=>{
+    if(!window.Reveal || !Reveal.isReady || !Reveal.isReady()) return '0.0';
+    const i=Reveal.getIndices(); return (i.h||0)+'.'+(i.v||0);
+  };
+  const slot =()=>{ const k=key(); return INK[k]||(INK[k]={over:[],page:[]}); };
+  const layer=()=>slot()[mode];
+  const frame=()=>{
+    const s=document.querySelector('.reveal .slides'), r=s?s.getBoundingClientRect():null;
+    return (r&&r.width) ? r : {left:0,top:0,width:window.innerWidth,height:window.innerHeight};
+  };
+  function stroke(s,r,i0){
+    if(!s.pts.length) return;
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.globalCompositeOperation = s.erase?'destination-out':'source-over';
+    ctx.strokeStyle = P()[s.tok]||s.tok;
+    ctx.lineWidth = s.w*r.width/1600;
+    const px=p=>[r.left+p[0]*r.width, r.top+p[1]*r.height];
+    const a=px(s.pts[Math.max(0,i0-1)]);
+    ctx.beginPath(); ctx.moveTo(a[0],a[1]);
+    if(s.pts.length===1) ctx.lineTo(a[0]+0.1,a[1]+0.1);
+    for(let i=Math.max(1,i0);i<s.pts.length;i++){ const b=px(s.pts[i]); ctx.lineTo(b[0],b[1]); }
+    ctx.stroke();
+    ctx.globalCompositeOperation='source-over';
+  }
+  function redraw(){ ctx.clearRect(0,0,window.innerWidth,window.innerHeight); const r=frame(); layer().forEach(s=>stroke(s,r,0)); }
+  function size(){
+    const dpr=window.devicePixelRatio||1;
+    cv.width=Math.round(window.innerWidth*dpr); cv.height=Math.round(window.innerHeight*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); redraw();
+  }
+  const pos=(e,r)=>[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height];
+  cv.addEventListener('pointerdown',e=>{
+    if(pid!==null) return;
+    e.preventDefault(); pid=e.pointerId;
+    try{ cv.setPointerCapture(pid); }catch(_){}
+    const r=frame();
+    cur={tok:tok, w: erasing?width*5:width, erase:erasing, pts:[pos(e,r)]};
+    layer().push(cur); stroke(cur,r,0); mark();
+  });
+  cv.addEventListener('pointermove',e=>{
+    if(!cur || e.pointerId!==pid) return;
+    const r=frame(), n=cur.pts.length;
+    const evs=(e.getCoalescedEvents && e.getCoalescedEvents().length) ? e.getCoalescedEvents() : [e];
+    evs.forEach(ev=>cur.pts.push(pos(ev,r)));
+    stroke(cur,r,n);
+  });
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>cv.addEventListener(ev,e=>{
+    if(e.pointerId!==pid) return; cur=null; pid=null;
+  }));
+  const sws=[...el.querySelectorAll('.sw')], szs=[...el.querySelectorAll('.szbtn')];
+  const bEr=el.querySelector('.js-eraser'), bOver=el.querySelector('.js-over'), bPage=el.querySelector('.js-page');
+  const paintSwatches=()=>sws.forEach(sw=>{ sw.style.background=P()[sw.dataset.tok]; });
+  function setErase(on){ erasing=on; bEr.classList.toggle('on',on); el.classList.toggle('erasing',on); }
+  function setMode(m){
+    mode=m; el.classList.toggle('over',m==='over'); el.classList.toggle('page',m==='page');
+    bOver.classList.toggle('on',m==='over'); bPage.classList.toggle('on',m==='page');
+    redraw();
+  }
+  sws.forEach(sw=>sw.addEventListener('click',()=>{ sws.forEach(o=>o.classList.remove('on')); sw.classList.add('on'); tok=sw.dataset.tok; setErase(false); }));
+  szs.forEach(b=>b.addEventListener('click',()=>{ szs.forEach(o=>o.classList.remove('on')); b.classList.add('on'); width=parseFloat(b.dataset.w); }));
+  bEr.addEventListener('click',()=>setErase(!erasing));
+  const undo=()=>{ layer().pop(); redraw(); mark(); };
+  el.querySelector('.js-undo').addEventListener('click',undo);
+  el.querySelector('.js-clear').addEventListener('click',()=>{ layer().length=0; redraw(); mark(); });
+  bOver.addEventListener('click',()=>setMode('over'));
+  bPage.addEventListener('click',()=>setMode('page'));
+  el.querySelector('.js-prev').addEventListener('click',()=>{ if(window.Reveal) Reveal.prev(); });
+  el.querySelector('.js-next').addEventListener('click',()=>{ if(window.Reveal) Reveal.next(); });
+  el.querySelector('.js-close').addEventListener('click',()=>toggle(false));
+  function mark(){
+    const s=INK[key()], b=document.getElementById('bBoard');
+    if(b) b.classList.toggle('has-ink', !!(s && (s.over.length || s.page.length)));
+  }
+  function toggle(force){
+    open = (typeof force==='boolean') ? force : !open;
+    el.classList.toggle('on',open);
+    document.body.classList.toggle('board-open',open);
+    if(open){ cur=null; pid=null; paintSwatches(); setMode(mode); size(); }
+    mark();
+  }
+  window.addEventListener('resize',()=>{ if(open) size(); });
+  document.addEventListener('keydown',e=>{
+    if(!open) return;
+    if(e.key==='Escape'){ e.preventDefault(); e.stopImmediatePropagation(); toggle(false); }
+    else if((e.ctrlKey||e.metaKey) && (e.key==='z'||e.key==='Z')){ e.preventDefault(); e.stopImmediatePropagation(); undo(); }
+  }, true);
+  return { toggle, isOpen:()=>open, paintSwatches, refresh:()=>{ if(open){ cur=null; pid=null; redraw(); } mark(); } };
+})();
+
+/* ========================================================================
+   5 · EMBEDDED EXPLORER + PROCEDURE VIDEO
+   ======================================================================== */
+const explorer=document.getElementById('explorer');
+function explorerTheme(){ if(!explorer) return;
+  try{ const d=explorer.contentDocument; if(d&&d.documentElement) d.documentElement.setAttribute('data-theme',theme); }catch(e){}
+}
+if(explorer) explorer.addEventListener('load',()=>{
+  explorerTheme();
+  try{
+    const d=explorer.contentDocument, w=explorer.contentWindow;
+    // keys the lecturer uses for the deck are passed back to it; the arrows stay with the Explorer
+    d.addEventListener('keydown',e=>{
+      if(!window.Reveal) return;
+      if(e.key===' '||e.key==='PageDown'){ e.preventDefault(); e.shiftKey?Reveal.prev():Reveal.next(); }
+      else if(e.key==='PageUp'){ e.preventDefault(); Reveal.prev(); }
+      else if(e.key==='w'||e.key==='W'){ Board.toggle(); }
+      else if(e.key==='t'||e.key==='T'){ toggleTheme(); }
+    });
+    // after a drag or a click inside the Explorer, give the keyboard back to the deck
+    d.addEventListener('pointerup',()=>setTimeout(()=>{ try{ if(d.activeElement&&d.activeElement.blur) d.activeElement.blur(); }catch(_){} window.focus(); },0));
+  }catch(e){}
+});
+
+const vid=document.getElementById('procvid');
+if(vid){
+  vid.addEventListener('error',()=>vid.closest('.vidcard').classList.add('missing'));
+  const vsrc=vid.querySelector('source'); if(vsrc) vsrc.addEventListener('error',()=>vid.closest('.vidcard').classList.add('missing'));
+  ['play','pause','seeked','volumechange'].forEach(ev=>vid.addEventListener(ev,()=>{ if(document.activeElement===vid) vid.blur(); }));
+}
+
+/* ========================================================================
+   6 · WIRING
+   ======================================================================== */
+function toggleTheme(){
+  theme=(theme==='dark')?'light':'dark';
+  ROOT.setAttribute('data-theme',theme);
+  try{ localStorage.setItem(THEME_KEY,theme); }catch(e){}
+  renderFigures(); explorerTheme();
+  Board.paintSwatches(); Board.refresh();
+}
+document.getElementById('themeBtn').addEventListener('click',toggleTheme);
+const giveBackKeys=()=>{ const a=document.activeElement; if(a && a!==document.body && a.blur) a.blur(); };
+document.addEventListener('click',e=>{ if(e.target.closest('button')) giveBackKeys(); });
+
+const $=id=>document.getElementById(id);
+$('bPrev').addEventListener('click',()=>{ if(window.Reveal) Reveal.prev(); });
+$('bNext').addEventListener('click',()=>{ if(window.Reveal) Reveal.next(); });
+$('bOver').addEventListener('click',()=>{ if(window.Reveal) Reveal.toggleOverview(); });
+$('bBoard').addEventListener('click',()=>Board.toggle());
+$('bFull').addEventListener('click',()=>{
+  const d=document, r=d.documentElement;
+  if(d.fullscreenElement||d.webkitFullscreenElement){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); }
+  else{ const f=r.requestFullscreen||r.webkitRequestFullscreen; if(f){ const p=f.call(r); if(p&&p.catch) p.catch(()=>{}); } }
+});
+function updateBar(){
+  if(!window.Reveal || !Reveal.isReady()) return;
+  const i=Reveal.getIndices(), h=i.h||0, v=i.v||0;
+  $('bPos').innerHTML='<b>'+(h===0?'Title':h+'.'+(v+1))+'</b>'+(Reveal.getSlidePastCount()+1)+' / '+Reveal.getTotalSlides();
+  $('bPrev').disabled = Reveal.isFirstSlide() && !Reveal.availableFragments().prev;
+  $('bNext').disabled = Reveal.isLastSlide()  && !Reveal.availableFragments().next;
+  $('bOver').classList.toggle('on', Reveal.isOverview());
+}
+
+/* ========================================================================
+   7 · BOOT — KaTeX, then reveal.js, each with a second CDN
+   ======================================================================== */
+const CDN={
+  katex :['https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js','https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js'],
+  auto  :['https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js','https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js'],
+  reveal:['https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/reveal.min.js','https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js'],
+  notes :['https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/plugin/notes/notes.min.js','https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js']
+};
+function loadScript(urls, ok){
+  return new Promise(res=>{
+    let i=0;
+    (function next(){
+      if(ok()) return res(true);
+      if(i>=urls.length) return res(false);
+      const s=document.createElement('script'); let done=false;
+      const fin=good=>{ if(done) return; done=true; clearTimeout(t); if(good&&ok()) res(true); else{ s.remove(); next(); } };
+      const t=setTimeout(()=>fin(false),12000);
+      s.onload=()=>fin(true); s.onerror=()=>fin(false);
+      s.src=urls[i++]; document.head.appendChild(s);
+    })();
+  });
+}
+function renderMath(){
+  if(typeof renderMathInElement!=='function') return;
+  renderMathInElement(document.body,{
+    delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+    ignoredClasses:['notes'], throwOnError:false
+  });
+}
+async function boot(){
+  if(window.self!==window.top) document.body.classList.add('embedded');
+  renderFigures();
+  const math = loadScript(CDN.katex, ()=>typeof katex!=='undefined')
+    .then(()=>loadScript(CDN.auto, ()=>typeof renderMathInElement==='function')).then(renderMath);
+  const deck = loadScript(CDN.reveal, ()=>typeof Reveal!=='undefined')
+    .then(ok=>ok ? loadScript(CDN.notes, ()=>typeof RevealNotes!=='undefined').then(()=>true) : false);
+  const [, haveReveal] = await Promise.all([math, deck]);
+  if(!haveReveal){ document.body.classList.remove('booting'); document.body.classList.add('no-reveal'); return; }
+  await Reveal.initialize({
+    width:1600, height:900, margin:0, minScale:0.2, maxScale:4,
+    center:false, hash:true, respondToHashChanges:true,
+    controls:true, controlsLayout:'bottom-right', controlsBackArrows:'faded', controlsTutorial:true,
+    progress:true, slideNumber:false, transition:'slide', backgroundTransition:'none',
+    navigationMode:'default', overview:true, touch:true, help:true,
+    plugins:(typeof RevealNotes!=='undefined') ? [RevealNotes] : []
+  });
+  Reveal.addKeyBinding({keyCode:87, key:'W', description:'Whiteboard'}, ()=>Board.toggle());
+  Reveal.addKeyBinding({keyCode:84, key:'T', description:'Light / dark theme'}, toggleTheme);
+  const sync=()=>{ fitAll(false); updateBar(); Board.refresh(); };
+  ['slidechanged','fragmentshown','fragmenthidden','overviewshown','overviewhidden'].forEach(ev=>Reveal.on(ev,sync));
+  Reveal.on('slidechanged',()=>{ if(vid && !vid.paused) vid.pause(); });
+  Reveal.on('resize',()=>{ Board.refresh(); });
+  fitAll(true); updateBar();
+  document.body.classList.remove('booting');
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>fitAll(true));
+  window.addEventListener('load',()=>fitAll(true));
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+</script>
+</body>
+</html>
